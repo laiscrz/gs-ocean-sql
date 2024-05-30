@@ -156,22 +156,22 @@ EXCEPTION
     WHEN DUP_VAL_ON_INDEX THEN
         v_sqlcode := SQLCODE;
         v_sqlerrm := SUBSTR(SQLERRM, 1, 200); -- Limitando a mensagem a 200 caracteres
-        INSERT INTO registro_log (nome_procedure, username, error_date, error_code, error_message)
-        VALUES ('carregar_usuario', USER, SYSDATE, v_sqlcode, v_sqlerrm);
-        ROLLBACK;
+        INSERT INTO registro_log (username, nome_procedure, error_date, error_message, error_code)
+        VALUES (USER, 'carregar_usuario', SYSDATE, v_sqlerrm, v_sqlcode);
+        DBMS_OUTPUT.PUT_LINE('Erro ao inserir usuario: Já existe um usuario com este ID.');
     WHEN VALUE_ERROR THEN
         v_sqlcode := SQLCODE;
         v_sqlerrm := SUBSTR(SQLERRM, 1, 200); -- Limitando a mensagem a 200 caracteres
-        INSERT INTO registro_log (nome_procedure, username, error_date, error_code, error_message)
-        VALUES ('carregar_usuario', USER, SYSDATE, v_sqlcode, v_sqlerrm);
-        ROLLBACK;
+        INSERT INTO registro_log (username, nome_procedure, error_date, error_message, error_code)
+        VALUES (USER, 'carregar_usuario', SYSDATE,  v_sqlerrm, v_sqlcode);
+        DBMS_OUTPUT.PUT_LINE('Erro ao inserir usuario: Verifique se os tipos de dados estão corretos.');
     WHEN OTHERS THEN
         v_sqlcode := SQLCODE;
         v_sqlerrm := SUBSTR(SQLERRM, 1, 200); -- Limitando a mensagem a 200 caracteres
-        INSERT INTO registro_log (nome_procedure, username, error_date, error_code, error_message)
-        VALUES ('carregar_usuario', USER, SYSDATE, v_sqlcode, v_sqlerrm);
-        ROLLBACK;
+        INSERT INTO registro_log (username, nome_procedure, error_date, error_message, error_code)
+        VALUES (USER, 'carregar_usuario', SYSDATE, v_sqlerrm, v_sqlcode);
 END carregar_usuario;
 
 
 -- RELATÓRIOS
+
