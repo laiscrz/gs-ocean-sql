@@ -39,6 +39,7 @@ DROP TABLE usuario CASCADE CONSTRAINTS;
 CREATE TABLE usuario (
     id_usuario NUMBER(8) PRIMARY KEY,     -- ID único do usuário
     nome VARCHAR2(60),                     -- Nome do usuário
+    genero CHAR(1),                        -- Genero do usuario (F/M)
     email VARCHAR2(30),                    -- Endereço de e-mail do usuário
     senha VARCHAR2(20)                     -- Senha do usuário
 );
@@ -116,7 +117,6 @@ ALTER TABLE especie ADD CONSTRAINT fk_especie_categoria FOREIGN KEY ( categoria_
 -- Chave estrangeira para relacionamento com a tabela situacao
 ALTER TABLE especie ADD CONSTRAINT fk_especie_situacao FOREIGN KEY ( situacao_id ) REFERENCES situacao ( id_situacao );
 
-
 /* CREATE TABLE DE REGISTROS DE LOGS*/
 DROP TABLE registro_log CASCADE CONSTRAINTS; -- DROP da tabela log
 CREATE TABLE registro_log (
@@ -144,13 +144,13 @@ DROP PROCEDURE carregar_deteccao;
 /* USUARIO */
 -- Procedure para inserir/carregar dados na tabela usuario
 CREATE OR REPLACE PROCEDURE carregar_usuario (
-    p_id_usuario IN NUMBER,p_nome IN VARCHAR2,p_email IN VARCHAR2,p_senha IN VARCHAR2)
+    p_id_usuario IN NUMBER,p_nome IN VARCHAR2, p_genero IN CHAR,p_email IN VARCHAR2,p_senha IN VARCHAR2)
 AS 
     v_sqlcode NUMBER;
     v_sqlerrm VARCHAR2(200); -- Ajustando para limitar a mensagem a 200 caracteres
 BEGIN
-    INSERT INTO usuario (id_usuario, nome, email, senha)
-    VALUES (p_id_usuario, p_nome, p_email, p_senha);  
+    INSERT INTO usuario (id_usuario, nome, genero, email, senha)
+    VALUES (p_id_usuario, p_nome, p_genero, p_email, p_senha);  
     COMMIT;
 EXCEPTION
     WHEN DUP_VAL_ON_INDEX THEN
@@ -364,5 +364,6 @@ EXCEPTION
         VALUES (USER, 'carregar_deteccao', SYSDATE, v_sqlerrm, v_sqlcode);
 END carregar_deteccao;
 
+-- INSERIR através de parametros nos procedimentos
 
 -- RELATÓRIOS
