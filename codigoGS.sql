@@ -299,4 +299,38 @@ EXCEPTION
         VALUES (USER, 'carregar_situacao', SYSDATE, v_sqlerrm, v_sqlcode);
 END carregar_situacao;
 
+/* ESPECIE */
+-- Procedure para inserir/carregar dados na tabela especie
+CREATE OR REPLACE PROCEDURE carregar_especie (
+    p_id_especie IN NUMBER, p_nome_comum IN VARCHAR2, p_nome_cientifico IN VARCHAR2,
+    p_descricao IN VARCHAR2, p_situacao_id IN NUMBER, p_categoria_id IN NUMBER)
+AS 
+    v_sqlcode NUMBER;
+    v_sqlerrm VARCHAR2(200); 
+BEGIN
+    INSERT INTO especie (id_especie, nome_comum, nome_cientifico, descricao, situacao_id, categoria_id)
+    VALUES (p_id_especie, p_nome_comum, p_nome_cientifico, p_descricao, p_situacao_id, p_categoria_id);  
+    COMMIT;
+EXCEPTION
+    WHEN DUP_VAL_ON_INDEX THEN
+        v_sqlcode := SQLCODE;
+        v_sqlerrm := SUBSTR(SQLERRM, 1, 200); 
+        INSERT INTO registro_log (username, nome_procedure, error_date, error_message, error_code)
+        VALUES (USER, 'carregar_especie', SYSDATE, v_sqlerrm, v_sqlcode);
+        DBMS_OUTPUT.PUT_LINE('Erro ao inserir espécie: Já existe uma espécie com este ID.');
+    WHEN VALUE_ERROR THEN
+        v_sqlcode := SQLCODE;
+        v_sqlerrm := SUBSTR(SQLERRM, 1, 200); 
+        INSERT INTO registro_log (username, nome_procedure, error_date, error_message, error_code)
+        VALUES (USER, 'carregar_especie', SYSDATE,  v_sqlerrm, v_sqlcode);
+        DBMS_OUTPUT.PUT_LINE('Erro ao inserir espécie: Verifique se os tipos de dados estão corretos.');
+    WHEN OTHERS THEN
+        v_sqlcode := SQLCODE;
+        v_sqlerrm := SUBSTR(SQLERRM, 1, 200); 
+        INSERT INTO registro_log (username, nome_procedure, error_date, error_message, error_code)
+        VALUES (USER, 'carregar_especie', SYSDATE, v_sqlerrm, v_sqlcode);
+END carregar_especie;
+
+
+
 -- RELATÓRIOS
