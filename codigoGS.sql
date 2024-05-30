@@ -11,6 +11,7 @@ Fabrico Torres Antonio - RM 97916 - Turma : 2TDSPH
 -- DDL (DROP,CREATE, ALTER)
 -- Comandos para definição de dados, incluindo a remoção de tabelas existentes, criações, alterações e suas restrições.
 
+/* DROPS */
 /* Remove a tabela 'categoria' e quaisquer restrições que dependem dela */
 DROP TABLE categoria CASCADE CONSTRAINTS;
 
@@ -32,6 +33,19 @@ DROP TABLE situacao CASCADE CONSTRAINTS;
 /* Remove a tabela 'usuario' e quaisquer restrições que dependem dela */
 DROP TABLE usuario CASCADE CONSTRAINTS;
 
+/* CREATES TABLES */
+
+/* ALTERS TABLES */
+
+/* CREATE TABLE DE LOG*/
+DROP TABLE log CASCADE CONSTRAINTS; -- DROP da tabela log
+CREATE TABLE log (
+    log_id NUMBER(8) GENERATED ALWAYS AS IDENTITY, -- Coluna de ID autoincrementável
+    procedure_name VARCHAR2(100),              -- Nome da Procedure
+    error_date DATE,                            -- Data do erro
+    error_code VARCHAR2(10),                    -- Código de erro
+    error_message VARCHAR2(200)               -- Mensagem de erro
+);
 
 -- CARGA DE DADOS
 
