@@ -175,12 +175,8 @@ END carregar_usuario;
 /* ONG */
 -- Procedure para inserir/carregar dados na tabela ong
 CREATE OR REPLACE PROCEDURE carregar_ong (
-    p_id_ong IN NUMBER,
-    p_cnpj IN VARCHAR2,
-    p_nome IN VARCHAR2,
-    p_email IN VARCHAR2,
-    p_telefone IN VARCHAR2
-)
+    p_id_ong IN NUMBER,p_cnpj IN VARCHAR2,p_nome IN VARCHAR2,
+    p_email IN VARCHAR2,p_telefone IN VARCHAR2)
 AS 
     v_sqlcode NUMBER;
     v_sqlerrm VARCHAR2(200); 
