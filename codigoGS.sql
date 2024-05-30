@@ -101,6 +101,21 @@ CREATE TABLE deteccao (
 
 
 /* ALTERS TABLES */
+/*ADD Chaves Extrangeiras - relacionamentos*/
+
+-- Chave estrangeira para relacionamento com a tabela especie
+ALTER TABLE deteccao ADD CONSTRAINT fk_deteccao_especie FOREIGN KEY ( especie_id )REFERENCES especie ( id_especie );
+-- Chave estrangeira para relacionamento com a tabela localizacao
+ALTER TABLE deteccao ADD CONSTRAINT fk_deteccao_localizacao FOREIGN KEY ( localizacao_id ) REFERENCES localizacao ( id_localizacao );
+-- Chave estrangeira para relacionamento com a tabela ong
+ALTER TABLE deteccao ADD CONSTRAINT fk_deteccao_ong FOREIGN KEY ( ong_id ) REFERENCES ong ( id_ong );
+-- Chave estrangeira para relacionamento com a tabela usuario
+ALTER TABLE deteccao ADD CONSTRAINT fk_deteccao_usuario FOREIGN KEY ( usuario_id ) REFERENCES usuario ( id_usuario );
+-- Chave estrangeira para relacionamento com a tabela categoria
+ALTER TABLE especie ADD CONSTRAINT fk_especie_categoria FOREIGN KEY ( categoria_id ) REFERENCES categoria ( id_categoria );
+-- Chave estrangeira para relacionamento com a tabela situacao
+ALTER TABLE especie ADD CONSTRAINT fk_especie_situacao FOREIGN KEY ( situacao_id ) REFERENCES situacao ( id_situacao );
+
 
 /* CREATE TABLE DE LOG*/
 DROP TABLE log CASCADE CONSTRAINTS; -- DROP da tabela log
