@@ -121,7 +121,8 @@ ALTER TABLE especie ADD CONSTRAINT fk_especie_situacao FOREIGN KEY ( situacao_id
 DROP TABLE log CASCADE CONSTRAINTS; -- DROP da tabela log
 CREATE TABLE log (
     log_id NUMBER(8) GENERATED ALWAYS AS IDENTITY, -- Coluna de ID autoincrementável
-    procedure_name VARCHAR2(100),              -- Nome da Procedure
+    nome_procedure VARCHAR2(100),              -- Nome da Procedure
+    username VARCHAR2(50),                     -- nome do user
     error_date DATE,                            -- Data do erro
     error_code VARCHAR2(10),                    -- Código de erro
     error_message VARCHAR2(200)               -- Mensagem de erro
