@@ -128,7 +128,17 @@ CREATE TABLE registro_log (
     error_message VARCHAR2(200)               -- Mensagem de erro
 );
 
--- CARGA DE DADOS
+-- CARGA DE DADOS -> Criação e Procedures 
+SET SERVEROUTPUT ON;
+SET VERIFY OFF;
 
+/*DROPS PROCEDURES DE CARGA DE DADOS*/
+DROP PROCEDURE carregar_usuario;
+DROP PROCEDURE carregar_ong;
+DROP PROCEDURE carregar_localizacao;
+DROP PROCEDURE carregar_categoria;
+DROP PROCEDURE carregar_situacao;
+DROP PROCEDURE carregar_especie;
+DROP PROCEDURE carregar_deteccao;
 
 -- RELATÓRIOS
