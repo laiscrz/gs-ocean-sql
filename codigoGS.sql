@@ -141,4 +141,37 @@ DROP PROCEDURE carregar_situacao;
 DROP PROCEDURE carregar_especie;
 DROP PROCEDURE carregar_deteccao;
 
+/* USUARIO */
+-- Procedure para inserir/carregar dados na tabela usuario
+CREATE OR REPLACE PROCEDURE carregar_usuario (
+    p_id_usuario IN NUMBER,p_nome IN VARCHAR2,p_email IN VARCHAR2,p_senha IN VARCHAR2)
+AS 
+    v_sqlcode NUMBER;
+    v_sqlerrm VARCHAR2(200); -- Ajustando para limitar a mensagem a 200 caracteres
+BEGIN
+    INSERT INTO usuario (id_usuario, nome, email, senha)
+    VALUES (p_id_usuario, p_nome, p_email, p_senha);  
+    COMMIT;
+EXCEPTION
+    WHEN DUP_VAL_ON_INDEX THEN
+        v_sqlcode := SQLCODE;
+        v_sqlerrm := SUBSTR(SQLERRM, 1, 200); -- Limitando a mensagem a 200 caracteres
+        INSERT INTO registro_log (nome_procedure, username, error_date, error_code, error_message)
+        VALUES ('carregar_usuario', USER, SYSDATE, v_sqlcode, v_sqlerrm);
+        ROLLBACK;
+    WHEN VALUE_ERROR THEN
+        v_sqlcode := SQLCODE;
+        v_sqlerrm := SUBSTR(SQLERRM, 1, 200); -- Limitando a mensagem a 200 caracteres
+        INSERT INTO registro_log (nome_procedure, username, error_date, error_code, error_message)
+        VALUES ('carregar_usuario', USER, SYSDATE, v_sqlcode, v_sqlerrm);
+        ROLLBACK;
+    WHEN OTHERS THEN
+        v_sqlcode := SQLCODE;
+        v_sqlerrm := SUBSTR(SQLERRM, 1, 200); -- Limitando a mensagem a 200 caracteres
+        INSERT INTO registro_log (nome_procedure, username, error_date, error_code, error_message)
+        VALUES ('carregar_usuario', USER, SYSDATE, v_sqlcode, v_sqlerrm);
+        ROLLBACK;
+END carregar_usuario;
+
+
 -- RELATÓRIOS
