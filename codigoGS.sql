@@ -236,5 +236,67 @@ EXCEPTION
         VALUES (USER, 'carregar_localizacao', SYSDATE, v_sqlerrm, v_sqlcode);
 END carregar_localizacao;
 
+/* CATEGORIA */
+-- Procedure para inserir/carregar dados na tabela categoria
+CREATE OR REPLACE PROCEDURE carregar_categoria (
+    p_id_categoria IN NUMBER, p_nome IN VARCHAR2,p_habitat IN VARCHAR2,
+    p_reino IN VARCHAR2,p_familia IN VARCHAR2)
+AS 
+    v_sqlcode NUMBER;
+    v_sqlerrm VARCHAR2(200); 
+BEGIN
+    INSERT INTO categoria (id_categoria, nome, habitat, reino, familia)
+    VALUES (p_id_categoria, p_nome, p_habitat, p_reino, p_familia);  
+    COMMIT;
+EXCEPTION
+    WHEN DUP_VAL_ON_INDEX THEN
+        v_sqlcode := SQLCODE;
+        v_sqlerrm := SUBSTR(SQLERRM, 1, 200); 
+        INSERT INTO registro_log (username, nome_procedure, error_date, error_message, error_code)
+        VALUES (USER, 'carregar_categoria', SYSDATE, v_sqlerrm, v_sqlcode);
+        DBMS_OUTPUT.PUT_LINE('Erro ao inserir categoria: Já existe uma categoria com este ID.');
+    WHEN VALUE_ERROR THEN
+        v_sqlcode := SQLCODE;
+        v_sqlerrm := SUBSTR(SQLERRM, 1, 200); 
+        INSERT INTO registro_log (username, nome_procedure, error_date, error_message, error_code)
+        VALUES (USER, 'carregar_categoria', SYSDATE,  v_sqlerrm, v_sqlcode);
+        DBMS_OUTPUT.PUT_LINE('Erro ao inserir categoria: Verifique se os tipos de dados estão corretos.');
+    WHEN OTHERS THEN
+        v_sqlcode := SQLCODE;
+        v_sqlerrm := SUBSTR(SQLERRM, 1, 200); 
+        INSERT INTO registro_log (username, nome_procedure, error_date, error_message, error_code)
+        VALUES (USER, 'carregar_categoria', SYSDATE, v_sqlerrm, v_sqlcode);
+END carregar_categoria;
+
+/* SITUACAO */
+-- Procedure para inserir/carregar dados na tabela situacao
+CREATE OR REPLACE PROCEDURE carregar_situacao (
+    p_id_situacao IN NUMBER,p_risco_extincao IN CHAR,p_invasora IN CHAR)
+AS 
+    v_sqlcode NUMBER;
+    v_sqlerrm VARCHAR2(200); 
+BEGIN
+    INSERT INTO situacao (id_situacao, risco_extincao, invasora)
+    VALUES (p_id_situacao, p_risco_extincao, p_invasora);  
+    COMMIT;
+EXCEPTION
+    WHEN DUP_VAL_ON_INDEX THEN
+        v_sqlcode := SQLCODE;
+        v_sqlerrm := SUBSTR(SQLERRM, 1, 200); 
+        INSERT INTO registro_log (username, nome_procedure, error_date, error_message, error_code)
+        VALUES (USER, 'carregar_situacao', SYSDATE, v_sqlerrm, v_sqlcode);
+        DBMS_OUTPUT.PUT_LINE('Erro ao inserir situação: Já existe uma situação com este ID.');
+    WHEN VALUE_ERROR THEN
+        v_sqlcode := SQLCODE;
+        v_sqlerrm := SUBSTR(SQLERRM, 1, 200); 
+        INSERT INTO registro_log (username, nome_procedure, error_date, error_message, error_code)
+        VALUES (USER, 'carregar_situacao', SYSDATE,  v_sqlerrm, v_sqlcode);
+        DBMS_OUTPUT.PUT_LINE('Erro ao inserir situação: Verifique se os tipos de dados estão corretos.');
+    WHEN OTHERS THEN
+        v_sqlcode := SQLCODE;
+        v_sqlerrm := SUBSTR(SQLERRM, 1, 200); 
+        INSERT INTO registro_log (username, nome_procedure, error_date, error_message, error_code)
+        VALUES (USER, 'carregar_situacao', SYSDATE, v_sqlerrm, v_sqlcode);
+END carregar_situacao;
 
 -- RELATÓRIOS
