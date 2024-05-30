@@ -155,13 +155,13 @@ BEGIN
 EXCEPTION
     WHEN DUP_VAL_ON_INDEX THEN
         v_sqlcode := SQLCODE;
-        v_sqlerrm := SUBSTR(SQLERRM, 1, 200); -- Limitando a mensagem a 200 caracteres
+        v_sqlerrm := SUBSTR(SQLERRM, 1, 200);
         INSERT INTO registro_log (username, nome_procedure, error_date, error_message, error_code)
         VALUES (USER, 'carregar_usuario', SYSDATE, v_sqlerrm, v_sqlcode);
         DBMS_OUTPUT.PUT_LINE('Erro ao inserir usuario: Já existe um usuario com este ID.');
     WHEN VALUE_ERROR THEN
         v_sqlcode := SQLCODE;
-        v_sqlerrm := SUBSTR(SQLERRM, 1, 200); -- Limitando a mensagem a 200 caracteres
+        v_sqlerrm := SUBSTR(SQLERRM, 1, 200); 
         INSERT INTO registro_log (username, nome_procedure, error_date, error_message, error_code)
         VALUES (USER, 'carregar_usuario', SYSDATE,  v_sqlerrm, v_sqlcode);
         DBMS_OUTPUT.PUT_LINE('Erro ao inserir usuario: Verifique se os tipos de dados estão corretos.');
@@ -172,6 +172,73 @@ EXCEPTION
         VALUES (USER, 'carregar_usuario', SYSDATE, v_sqlerrm, v_sqlcode);
 END carregar_usuario;
 
+/* ONG */
+-- Procedure para inserir/carregar dados na tabela ong
+CREATE OR REPLACE PROCEDURE carregar_ong (
+    p_id_ong IN NUMBER,
+    p_cnpj IN VARCHAR2,
+    p_nome IN VARCHAR2,
+    p_email IN VARCHAR2,
+    p_telefone IN VARCHAR2
+)
+AS 
+    v_sqlcode NUMBER;
+    v_sqlerrm VARCHAR2(200); 
+BEGIN
+    INSERT INTO ong (id_ong, cnpj, nome, email, telefone)
+    VALUES (p_id_ong, p_cnpj, p_nome, p_email, p_telefone);  
+    COMMIT;
+EXCEPTION
+    WHEN DUP_VAL_ON_INDEX THEN
+        v_sqlcode := SQLCODE;
+        v_sqlerrm := SUBSTR(SQLERRM, 1, 200); -- Limitando a mensagem a 200 caracteres
+        INSERT INTO registro_log (username, nome_procedure, error_date, error_message, error_code)
+        VALUES (USER, 'carregar_ong', SYSDATE, v_sqlerrm, v_sqlcode);
+        DBMS_OUTPUT.PUT_LINE('Erro ao inserir ONG: Já existe uma ONG com este ID.');
+    WHEN VALUE_ERROR THEN
+        v_sqlcode := SQLCODE;
+        v_sqlerrm := SUBSTR(SQLERRM, 1, 200); -- Limitando a mensagem a 200 caracteres
+        INSERT INTO registro_log (username, nome_procedure, error_date, error_message, error_code)
+        VALUES (USER, 'carregar_ong', SYSDATE,  v_sqlerrm, v_sqlcode);
+        DBMS_OUTPUT.PUT_LINE('Erro ao inserir ONG: Verifique se os tipos de dados estão corretos.');
+    WHEN OTHERS THEN
+        v_sqlcode := SQLCODE;
+        v_sqlerrm := SUBSTR(SQLERRM, 1, 200); 
+        INSERT INTO registro_log (username, nome_procedure, error_date, error_message, error_code)
+        VALUES (USER, 'carregar_ong', SYSDATE, v_sqlerrm, v_sqlcode);
+END carregar_ong;
+
+/* LOCALIZACAO */
+-- Procedure para inserir/carregar dados na tabela localizacao
+CREATE OR REPLACE PROCEDURE carregar_localizacao (
+    p_id_localizacao IN NUMBER, p_latitude IN NUMBER, p_longitude IN NUMBER,
+    p_cidade IN VARCHAR2, p_estado IN VARCHAR2,p_pais IN VARCHAR2)
+AS 
+    v_sqlcode NUMBER;
+    v_sqlerrm VARCHAR2(200); 
+BEGIN
+    INSERT INTO localizacao (id_localizacao, latitude, longitude, cidade, estado, pais)
+    VALUES (p_id_localizacao, p_latitude, p_longitude, p_cidade, p_estado, p_pais);  
+    COMMIT;
+EXCEPTION
+    WHEN DUP_VAL_ON_INDEX THEN
+        v_sqlcode := SQLCODE;
+        v_sqlerrm := SUBSTR(SQLERRM, 1, 200); 
+        INSERT INTO registro_log (username, nome_procedure, error_date, error_message, error_code)
+        VALUES (USER, 'carregar_localizacao', SYSDATE, v_sqlerrm, v_sqlcode);
+        DBMS_OUTPUT.PUT_LINE('Erro ao inserir localização: Já existe uma localização com este ID.');
+    WHEN VALUE_ERROR THEN
+        v_sqlcode := SQLCODE;
+        v_sqlerrm := SUBSTR(SQLERRM, 1, 200); 
+        INSERT INTO registro_log (username, nome_procedure, error_date, error_message, error_code)
+        VALUES (USER, 'carregar_localizacao', SYSDATE,  v_sqlerrm, v_sqlcode);
+        DBMS_OUTPUT.PUT_LINE('Erro ao inserir localização: Verifique se os tipos de dados estão corretos.');
+    WHEN OTHERS THEN
+        v_sqlcode := SQLCODE;
+        v_sqlerrm := SUBSTR(SQLERRM, 1, 200); 
+        INSERT INTO registro_log (username, nome_procedure, error_date, error_message, error_code)
+        VALUES (USER, 'carregar_localizacao', SYSDATE, v_sqlerrm, v_sqlcode);
+END carregar_localizacao;
+
 
 -- RELATÓRIOS
-
