@@ -456,10 +456,11 @@ DECLARE
     v_limite_deteccoes NUMBER := 2; -- Limite de detecções para tomada de decisão
 BEGIN
     OPEN c_deteccoes;
+    DBMS_OUTPUT.PUT_LINE('RELATÓRIO DE DETECÇÕES POR ESPECIE:');
+    DBMS_OUTPUT.PUT_LINE('-----------------------------');
     LOOP
         FETCH c_deteccoes INTO v_nome_especie, v_total_deteccoes;
         EXIT WHEN c_deteccoes%NOTFOUND;
-
         -- Tomada de decisão: Se o total de detecções for maior que o limite, imprima uma mensagem de aviso
         IF v_total_deteccoes > v_limite_deteccoes THEN
             DBMS_OUTPUT.PUT_LINE('Espécie: ' || v_nome_especie || ', Total de detecções: ' || v_total_deteccoes || '. Número alto de detecções!');
@@ -471,7 +472,7 @@ BEGIN
 END;
 
 /*
-BLOCO ANONIMO 2:
+BLOCO ANONIMO 2: Determinar o gênero com mais detecções usando cursor
 - Uso de Cursor
 - Tomada de Decisão
 */
