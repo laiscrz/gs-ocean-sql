@@ -534,11 +534,43 @@ BEGIN
         DBMS_OUTPUT.PUT_LINE('Total de detecções para o gênero F: ' || v_total_deteccoes_F);
     END IF;
 END;
+
 /*
-BLOCO ANONIMO 3:
+BLOCO ANONIMO 3: espécies estão em risco de extinção
 - Uso de Cursor Explicito
 - Tomada de Decisão
 */
+DECLARE
+    CURSOR c_especies_em_risco IS
+        SELECT e.nome_comum, s.risco_extincao
+        FROM especie e
+        JOIN situacao s ON e.situacao_id = s.id_situacao;
+        
+    v_nome_especie especie.nome_comum%TYPE;
+    v_em_risco_extincao situacao.risco_extincao%TYPE;
+BEGIN
+    -- Abrir o cursor
+    OPEN c_especies_em_risco;
+
+    -- Iterar sobre as espécies
+    LOOP
+        -- Buscar próximo registro
+        FETCH c_especies_em_risco INTO v_nome_especie, v_em_risco_extincao;
+        
+        -- Sair do loop quando não houver mais registros
+        EXIT WHEN c_especies_em_risco%NOTFOUND;
+
+        -- Tomada de decisão
+        IF v_em_risco_extincao = 'S' THEN
+            DBMS_OUTPUT.PUT_LINE('Espécie ' || v_nome_especie || ' está em risco de extinção.');
+        ELSE
+            DBMS_OUTPUT.PUT_LINE('Espécie ' || v_nome_especie || ' não está em risco de extinção.');
+        END IF;
+    END LOOP;
+
+    -- Fechar o cursor
+    CLOSE c_especies_em_risco;
+END;
 
 /*
 BLOCO ANONIMO 4:
