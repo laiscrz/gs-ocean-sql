@@ -441,7 +441,7 @@ END;
 -- RELATÓRIOS
 /*
 BLOCO ANONIMO 1: Contagem de detecções por espécie
-- Uso de Cursor
+- Uso de Cursor Explicito
 - Tomada de Decisão
 */
 DECLARE
@@ -473,20 +473,76 @@ END;
 
 /*
 BLOCO ANONIMO 2: Determinar o gênero com mais detecções usando cursor
-- Uso de Cursor
+- Uso de Cursor Explicito
 - Tomada de Decisão
 */
+DECLARE
+    CURSOR c_deteccoes_por_genero IS
+        SELECT u.genero, COUNT(*) AS total_deteccoes
+        FROM deteccao d
+        JOIN usuario u ON d.usuario_id = u.id_usuario
+        GROUP BY u.genero;
 
+    v_total_deteccoes_M NUMBER := 0; -- Variável para armazenar o total de detecções para o gênero masculino
+    v_total_deteccoes_F NUMBER := 0; -- Variável para armazenar o total de detecções para o gênero feminino
+    v_genero usuario.genero%TYPE;
+    v_total_deteccoes NUMBER;
+BEGIN
+    OPEN c_deteccoes_por_genero;
+    LOOP
+        FETCH c_deteccoes_por_genero INTO v_genero, v_total_deteccoes;
+        EXIT WHEN c_deteccoes_por_genero%NOTFOUND;
 
+        IF v_genero = 'M' THEN
+            v_total_deteccoes_M := v_total_deteccoes_M + v_total_deteccoes;
+        ELSIF v_genero = 'F' THEN
+            v_total_deteccoes_F := v_total_deteccoes_F + v_total_deteccoes;
+        END IF;
+    END LOOP;
+    CLOSE c_deteccoes_por_genero;
+    -- Imprimir relatório
+    DBMS_OUTPUT.PUT_LINE('RELATÓRIO DE DETECÇÕES POR GÊNERO:');
+    DBMS_OUTPUT.PUT_LINE('-----------------------------');
+
+    -- Reabrir o cursor para imprimir os resultados
+    OPEN c_deteccoes_por_genero;
+
+    LOOP
+        FETCH c_deteccoes_por_genero INTO v_genero, v_total_deteccoes;
+        EXIT WHEN c_deteccoes_por_genero%NOTFOUND;
+
+        DBMS_OUTPUT.PUT_LINE('Gênero: ' || v_genero || ' - Total de detecções: ' || v_total_deteccoes);
+    END LOOP;
+
+    -- Fechando o cursor novamente
+    CLOSE c_deteccoes_por_genero;
+
+    -- Tomada de Decisão: Comparar totais de detecções para determinar 
+    -- o gênero com mais detecções e imprimir resultado
+    IF v_total_deteccoes_M > v_total_deteccoes_F THEN
+        DBMS_OUTPUT.PUT_LINE('-----------------------------');
+        DBMS_OUTPUT.PUT_LINE('O gênero com mais detecções é: M');
+        DBMS_OUTPUT.PUT_LINE('Total de detecções para o gênero M: ' || v_total_deteccoes_M);
+    ELSIF v_total_deteccoes_F > v_total_deteccoes_M THEN
+        DBMS_OUTPUT.PUT_LINE('-----------------------------');
+        DBMS_OUTPUT.PUT_LINE('O gênero com mais detecções é: F');
+        DBMS_OUTPUT.PUT_LINE('Total de detecções para o gênero F: ' || v_total_deteccoes_F);
+    ELSE
+        DBMS_OUTPUT.PUT_LINE('-----------------------------');
+        DBMS_OUTPUT.PUT_LINE('Há o mesmo número de detecções para ambos os gêneros.');
+        DBMS_OUTPUT.PUT_LINE('Total de detecções para o gênero M: ' || v_total_deteccoes_M);
+        DBMS_OUTPUT.PUT_LINE('Total de detecções para o gênero F: ' || v_total_deteccoes_F);
+    END IF;
+END;
 /*
 BLOCO ANONIMO 3:
-- Uso de Cursor
+- Uso de Cursor Explicito
 - Tomada de Decisão
 */
 
 /*
 BLOCO ANONIMO 4:
-- Uso de Cursor
+- Uso de Cursor Explicito
 - Tomada de Decisão
 - listando todos os dados
 - mostrar os dado numricos sumarizados
