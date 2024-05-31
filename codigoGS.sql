@@ -573,10 +573,90 @@ BEGIN
 END;
 
 /*
-BLOCO ANONIMO 4:
+BLOCO ANONIMO 4: Relatorio visualizado pelas ongs (em caso de especie em risco de extinção)
 - Uso de Cursor Explicito
 - Tomada de Decisão
 - listando todos os dados
-- mostrar os dado numricos sumarizados
+- mostrar os dado numericos sumarizados
 - mostrar a sumarização dos dados agrupados por um critério definido pelo grupo
 */
+DECLARE
+    -- Variáveis para armazenar os totais
+    total_geral NUMBER := 0;
+    subtotal_categoria NUMBER := 0;
+    categoria_anterior VARCHAR2(60) := NULL;
+
+    -- Cursor para selecionar os dados necessários
+    CURSOR cur_dados_tabela IS
+        SELECT l.pais, e.nome_comum, c.nome AS nome_categoria, s.risco_extincao AS situacao, COUNT(e.id_especie) AS quantidade_especies
+        FROM deteccao d
+        JOIN especie e ON d.especie_id = e.id_especie
+        JOIN categoria c ON e.categoria_id = c.id_categoria
+        JOIN localizacao l ON d.localizacao_id = l.id_localizacao
+        JOIN situacao s ON e.situacao_id = s.id_situacao
+        WHERE s.risco_extincao = 'S'
+        GROUP BY l.pais, e.nome_comum, c.nome, s.risco_extincao
+        ORDER BY l.pais, c.nome, e.nome_comum, s.risco_extincao;
+
+    -- Variáveis para armazenar os dados do cursor
+    reg_cur cur_dados_tabela%ROWTYPE;
+BEGIN
+    -- Imprime o cabeçalho do relatório
+    DBMS_OUTPUT.PUT_LINE('RELATÓRIO ENVIADOS AS ONGS');
+    DBMS_OUTPUT.PUT_LINE('-----------------------------------------------');
+    DBMS_OUTPUT.PUT_LINE('PAIS | NOME_ESPECIE | CATEGORIA | SITUACAO | QUANTIDADE_ESPECIES');
+    DBMS_OUTPUT.PUT_LINE('-----------------------------------------------');
+
+    -- Abre o cursor para percorrer os dados
+    OPEN cur_dados_tabela;
+
+    -- Loop para percorrer os dados e exibir o relatório
+    LOOP
+        -- Fetch para obter o próximo registro
+        FETCH cur_dados_tabela INTO reg_cur;
+
+        -- Sai do loop quando não houver mais registros
+        EXIT WHEN cur_dados_tabela%NOTFOUND;
+
+        -- Verifica se houve mudança na categoria
+        IF categoria_anterior IS NULL OR categoria_anterior <> reg_cur.nome_categoria THEN
+            -- Se houve mudança de categoria, exibe o subtotal da categoria anterior
+            IF categoria_anterior IS NOT NULL THEN
+                DBMS_OUTPUT.PUT_LINE('Subtotal ' || categoria_anterior || ': ' || subtotal_categoria);
+                DBMS_OUTPUT.PUT_LINE('-----------------------------------------------');
+            END IF;
+            categoria_anterior := reg_cur.nome_categoria;
+            subtotal_categoria := 0;
+        END IF;
+
+        -- Exibe os dados da categoria atual
+        DBMS_OUTPUT.PUT_LINE(reg_cur.pais || ' | ' || reg_cur.nome_comum || ' | ' || reg_cur.nome_categoria || ' | ' || reg_cur.situacao || ' | ' || reg_cur.quantidade_especies);
+
+        -- Soma a quantidade de espécies ao subtotal da categoria
+        subtotal_categoria := subtotal_categoria + reg_cur.quantidade_especies;
+    END LOOP;
+    
+    -- Exibe o subtotal da última categoria
+    IF categoria_anterior IS NOT NULL THEN
+        DBMS_OUTPUT.PUT_LINE('Subtotal ' || categoria_anterior || ': ' || subtotal_categoria);
+    END IF;
+
+    -- Calcula o total geral como a soma dos subtotais por categoria
+    SELECT SUM(quantidade_especies) INTO total_geral FROM (
+        SELECT COUNT(e.id_especie) AS quantidade_especies
+        FROM deteccao d
+        JOIN especie e ON d.especie_id = e.id_especie
+        JOIN situacao s ON e.situacao_id = s.id_situacao
+        WHERE s.risco_extincao = 'S'
+        GROUP BY e.categoria_id
+    );
+
+    -- Exibe o total geral
+    DBMS_OUTPUT.PUT_LINE('-----------------------------------------------');
+    DBMS_OUTPUT.PUT_LINE('Total Geral: ' || total_geral);
+
+    -- Fecha o cursor
+    CLOSE cur_dados_tabela;
+END;
+
+
