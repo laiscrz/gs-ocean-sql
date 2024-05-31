@@ -414,7 +414,6 @@ BEGIN
     carregar_situacao(45, 'S', 'N');
     COMMIT;
 END;
-/
 
 /* INSERINDO EM ESPECIE */
 BEGIN
@@ -426,7 +425,6 @@ BEGIN
     carregar_especie(56, 'Água-viva Comum', 'Aurelia aurita', 'Espécie de água-viva.', 42, 33);
     COMMIT;
 END;
-/
 
 /* INSERINDO EM DETECCAO */
 BEGIN
@@ -441,3 +439,39 @@ END;
 
 
 -- RELATÓRIOS
+/*BLOCO ANONIMO 1: Contagem de detecções por espécie
+- Uso de Cursor
+- Tomada de Decisão
+*/
+DECLARE
+    CURSOR c_deteccoes IS
+        SELECT e.nome_comum, COUNT(*) AS total_deteccoes
+        FROM especie e
+        JOIN deteccao d ON e.id_especie = d.especie_id
+        GROUP BY e.nome_comum;
+
+    v_nome_especie especie.nome_comum%TYPE;
+    v_total_deteccoes NUMBER;
+    v_limite_deteccoes NUMBER := 2; -- Limite de detecções para tomada de decisão
+BEGIN
+    OPEN c_deteccoes;
+    LOOP
+        FETCH c_deteccoes INTO v_nome_especie, v_total_deteccoes;
+        EXIT WHEN c_deteccoes%NOTFOUND;
+
+        -- Tomada de decisão: Se o total de detecções for maior que o limite, imprima uma mensagem
+        IF v_total_deteccoes > v_limite_deteccoes THEN
+            DBMS_OUTPUT.PUT_LINE('Espécie: ' || v_nome_especie || ', Total de detecções: ' || v_total_deteccoes || '. Número alto de detecções!');
+        ELSE
+            DBMS_OUTPUT.PUT_LINE('Espécie: ' || v_nome_especie || ', Total de detecções: ' || v_total_deteccoes);
+        END IF;
+    END LOOP;
+    CLOSE c_deteccoes;
+END;
+
+/*BLOCO ANONIMO 2:*/
+
+
+/*BLOCO ANONIMO 3:*/
+
+/*BLOCO ANONIMO 4:*/
