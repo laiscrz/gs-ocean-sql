@@ -50,7 +50,8 @@ CREATE TABLE ong (
     cnpj VARCHAR2(14),                      -- CNPJ da ONG
     nome VARCHAR2(60),                      -- Nome da ONG
     email VARCHAR2(30),                     -- Endereço de e-mail da ONG
-    telefone VARCHAR2(12)                   -- Número de telefone da ONG
+    telefone VARCHAR2(12),                   -- Número de telefone da ONG
+    deteccao_id NUMBER(8) NOT NULL           -- ID da DETECCAO que que ong recebe (chave estrangeira)
 );
 
 /* Tabela para armazenar informações de localização geográfica */
@@ -96,7 +97,6 @@ CREATE TABLE deteccao (
     data_deteccao DATE,                      -- Data da detecção
     usuario_id NUMBER(8) NOT NULL,           -- ID do usuário que fez a detecção (chave estrangeira)
     especie_id NUMBER(8) NOT NULL,           -- ID da espécie detectada (chave estrangeira)
-    ong_id NUMBER(8) NOT NULL,               -- ID da ONG que registrou a detecção (chave estrangeira)
     localizacao_id NUMBER(8) NOT NULL        -- ID da localização da detecção (chave estrangeira)
 );
 
@@ -108,8 +108,8 @@ CREATE TABLE deteccao (
 ALTER TABLE deteccao ADD CONSTRAINT fk_deteccao_especie FOREIGN KEY ( especie_id )REFERENCES especie ( id_especie );
 -- Chave estrangeira para relacionamento com a tabela localizacao
 ALTER TABLE deteccao ADD CONSTRAINT fk_deteccao_localizacao FOREIGN KEY ( localizacao_id ) REFERENCES localizacao ( id_localizacao );
--- Chave estrangeira para relacionamento com a tabela ong
-ALTER TABLE deteccao ADD CONSTRAINT fk_deteccao_ong FOREIGN KEY ( ong_id ) REFERENCES ong ( id_ong );
+-- Chave estrangeira para relacionamento com a tabela deteccao
+ALTER TABLE ong ADD CONSTRAINT fk_ong_deteccao FOREIGN KEY ( deteccao_id ) REFERENCES deteccao ( id_deteccao );
 -- Chave estrangeira para relacionamento com a tabela usuario
 ALTER TABLE deteccao ADD CONSTRAINT fk_deteccao_usuario FOREIGN KEY ( usuario_id ) REFERENCES usuario ( id_usuario );
 -- Chave estrangeira para relacionamento com a tabela categoria
@@ -176,13 +176,13 @@ END carregar_usuario;
 -- Procedure para inserir/carregar dados na tabela ong
 CREATE OR REPLACE PROCEDURE carregar_ong (
     p_id_ong IN NUMBER,p_cnpj IN VARCHAR2,p_nome IN VARCHAR2,
-    p_email IN VARCHAR2,p_telefone IN VARCHAR2)
+    p_email IN VARCHAR2,p_telefone IN VARCHAR2, p_deteccao_id IN NUMBER)
 AS 
     v_sqlcode NUMBER;
     v_sqlerrm VARCHAR2(200); 
 BEGIN
-    INSERT INTO ong (id_ong, cnpj, nome, email, telefone)
-    VALUES (p_id_ong, p_cnpj, p_nome, p_email, p_telefone);  
+    INSERT INTO ong (id_ong, cnpj, nome, email, telefone, deteccao_id)
+    VALUES (p_id_ong, p_cnpj, p_nome, p_email, p_telefone, p_deteccao_id);  
     COMMIT;
 EXCEPTION
     WHEN DUP_VAL_ON_INDEX THEN
@@ -335,14 +335,13 @@ END carregar_especie;
 -- Procedure para inserir/carregar dados na tabela deteccao
 CREATE OR REPLACE PROCEDURE carregar_deteccao (
     p_id_deteccao IN NUMBER, p_url_imagem IN VARCHAR2, p_data_deteccao IN DATE,
-    p_usuario_id IN NUMBER, p_especie_id IN NUMBER,p_ong_id IN NUMBER,
-    p_localizacao_id IN NUMBER)
+    p_usuario_id IN NUMBER, p_especie_id IN NUMBER,p_localizacao_id IN NUMBER)
 AS 
     v_sqlcode NUMBER;
     v_sqlerrm VARCHAR2(200); 
 BEGIN
-    INSERT INTO deteccao (id_deteccao, url_imagem, data_deteccao, usuario_id, especie_id, ong_id, localizacao_id)
-    VALUES (p_id_deteccao, p_url_imagem, p_data_deteccao, p_usuario_id, p_especie_id, p_ong_id, p_localizacao_id);  
+    INSERT INTO deteccao (id_deteccao, url_imagem, data_deteccao, usuario_id, especie_id, localizacao_id)
+    VALUES (p_id_deteccao, p_url_imagem, p_data_deteccao, p_usuario_id, p_especie_id, p_localizacao_id);  
     COMMIT;
 EXCEPTION
     WHEN DUP_VAL_ON_INDEX THEN
@@ -372,16 +371,6 @@ BEGIN
     carregar_usuario(3, 'Caio Silva', 'M', 'caio@example.com', 'caio84');
     carregar_usuario(4, 'Maria da Penha', 'F', 'maria@example.com', 'mari3399');
     carregar_usuario(5, 'Ana Ferreira', 'F', 'ana@example.com', 'anaferr90');
-    COMMIT;
-END;
-
-/* INSERINDO EM ONG */
-BEGIN
-    carregar_ong(11, '12345678000100', 'ONG Oceano Azul', 'contato@oceanoazul.org', '11112222');
-    carregar_ong(12, '22345678000100', 'ONG Mar Limpo', 'contato@marlimpo.org', '22223333');
-    carregar_ong(13, '32345678000100', 'ONG Vida Marinha', 'contato@vidamarinha.org', '33334444');
-    carregar_ong(14, '42345678000100', 'ONG Guardiões do Mar', 'contato@guardioesdomar.org', '44445555');
-    carregar_ong(15, '52345678000100', 'ONG Protetores do Oceano', 'contato@protetoresdooceano.org', '55556666');
     COMMIT;
 END;
 
@@ -428,15 +417,25 @@ END;
 
 /* INSERINDO EM DETECCAO */
 BEGIN
-    carregar_deteccao(61, 'https://example.com/tartaruga.jpg', TO_DATE('2023-05-01', 'YYYY-MM-DD'), 1, 51, 11, 21);
-    carregar_deteccao(62, 'https://example.com/baleia.jpg', TO_DATE('2023-06-15', 'YYYY-MM-DD'), 2, 52, 12, 22);
-    carregar_deteccao(63, 'https://example.com/polvo.jpg', TO_DATE('2023-07-20', 'YYYY-MM-DD'), 3, 53, 13, 23);
-    carregar_deteccao(64, 'https://example.com/tubarao.jpg', TO_DATE('2023-08-10', 'YYYY-MM-DD'), 4, 54, 14, 24);
-    carregar_deteccao(65, 'https://example.com/peixe-palhaco.jpg', TO_DATE('2023-09-05', 'YYYY-MM-DD'), 5, 55, 15, 25);
-    carregar_deteccao(66, 'https://example.com/agua-viva-comum.jpg', TO_DATE('2023-10-01', 'YYYY-MM-DD'), 1, 56, 11, 21);
+    carregar_deteccao(61, 'https://example.com/tartaruga.jpg', TO_DATE('2023-05-01', 'YYYY-MM-DD'), 1, 51, 21);
+    carregar_deteccao(62, 'https://example.com/baleia.jpg', TO_DATE('2023-06-15', 'YYYY-MM-DD'), 2, 52, 22);
+    carregar_deteccao(63, 'https://example.com/polvo.jpg', TO_DATE('2023-07-20', 'YYYY-MM-DD'), 3, 53, 23);
+    carregar_deteccao(64, 'https://example.com/tubarao.jpg', TO_DATE('2023-08-10', 'YYYY-MM-DD'), 4, 54,24);
+    carregar_deteccao(65, 'https://example.com/peixe-palhaco.jpg', TO_DATE('2023-09-05', 'YYYY-MM-DD'), 5, 55,25);
+    carregar_deteccao(66, 'https://example.com/agua-viva-comum.jpg', TO_DATE('2023-10-01', 'YYYY-MM-DD'), 1, 56, 21);
     COMMIT;
 END;
 
+/* INSERINDO EM ONG */
+BEGIN
+    carregar_ong(11, '12345678000100', 'ONG Oceano Azul', 'contato@oceanoazul.org', '11112222', 61);
+    carregar_ong(12, '22345678000100', 'ONG Mar Limpo', 'contato@marlimpo.org', '22223333', 62);
+    carregar_ong(13, '32345678000100', 'ONG Vida Marinha', 'contato@vidamarinha.org', '33334444', 63);
+    carregar_ong(14, '42345678000100', 'ONG Guardiões do Mar', 'contato@guardioesdomar.org', '44445555', 64);
+    carregar_ong(15, '52345678000100', 'ONG Protetores do Oceano', 'contato@protetoresdooceano.org', '55556666', 65);
+    carregar_ong(16, '12456987000100', 'ONG Preservando a vida Maritima', 'contato@vidamaritma.org', '55556666', 66);
+    COMMIT;
+END;
 
 -- RELATÓRIOS
 /*
