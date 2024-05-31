@@ -439,7 +439,8 @@ END;
 
 
 -- RELATÓRIOS
-/*BLOCO ANONIMO 1: Contagem de detecções por espécie
+/*
+BLOCO ANONIMO 1: Contagem de detecções por espécie
 - Uso de Cursor
 - Tomada de Decisão
 */
@@ -459,7 +460,7 @@ BEGIN
         FETCH c_deteccoes INTO v_nome_especie, v_total_deteccoes;
         EXIT WHEN c_deteccoes%NOTFOUND;
 
-        -- Tomada de decisão: Se o total de detecções for maior que o limite, imprima uma mensagem
+        -- Tomada de decisão: Se o total de detecções for maior que o limite, imprima uma mensagem de aviso
         IF v_total_deteccoes > v_limite_deteccoes THEN
             DBMS_OUTPUT.PUT_LINE('Espécie: ' || v_nome_especie || ', Total de detecções: ' || v_total_deteccoes || '. Número alto de detecções!');
         ELSE
@@ -469,9 +470,16 @@ BEGIN
     CLOSE c_deteccoes;
 END;
 
-/*BLOCO ANONIMO 2:*/
+/*
+BLOCO ANONIMO 2:
+
+*/
 
 
-/*BLOCO ANONIMO 3:*/
+/*
+BLOCO ANONIMO 3:
+*/
 
-/*BLOCO ANONIMO 4:*/
+/*
+BLOCO ANONIMO 4:
+*/
