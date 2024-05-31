@@ -472,14 +472,22 @@ END;
 
 /*
 BLOCO ANONIMO 2:
-
+- Uso de Cursor
+- Tomada de Decisão
 */
 
 
 /*
 BLOCO ANONIMO 3:
+- Uso de Cursor
+- Tomada de Decisão
 */
 
 /*
 BLOCO ANONIMO 4:
+- Uso de Cursor
+- Tomada de Decisão
+- listando todos os dados
+- mostrar os dado numricos sumarizados
+- mostrar a sumarização dos dados agrupados por um critério definido pelo grupo
 */
