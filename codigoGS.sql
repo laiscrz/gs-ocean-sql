@@ -446,36 +446,56 @@ END;
 
 -- RELATÓRIOS
 /*
-BLOCO ANONIMO 1: Contagem de detecções por espécie
+BLOCO ANONIMO 1: Detecções atraves das datas
 - Uso de Cursor Explicito
 - Tomada de Decisão
 */
 DECLARE
+    -- Declaração do cursor explícito para selecionar todas as detecções
     CURSOR c_deteccoes IS
-        SELECT e.nome_comum, COUNT(*) AS total_deteccoes
-        FROM especie e
-        JOIN deteccao d ON e.id_especie = d.especie_id
-        GROUP BY e.nome_comum;
-
-    v_nome_especie especie.nome_comum%TYPE;
-    v_total_deteccoes NUMBER;
-    v_limite_deteccoes NUMBER := 2; -- Limite de detecções para tomada de decisão
+        SELECT d.id_deteccao, d.url_imagem, d.data_deteccao, u.nome AS nome_usuario, e.nome_comum AS especie_detectada
+        FROM deteccao d
+        JOIN usuario u ON d.usuario_id = u.id_usuario
+        JOIN especie e ON d.especie_id = e.id_especie;
+    
+    -- Variáveis para armazenar os dados de cada detecção
+    v_id_deteccao deteccao.id_deteccao%TYPE;
+    v_url_imagem deteccao.url_imagem%TYPE;
+    v_data_deteccao deteccao.data_deteccao%TYPE;
+    v_nome_usuario usuario.nome%TYPE;
+    v_especie_detectada especie.nome_comum%TYPE;
+    
 BEGIN
+    -- Abrindo o cursor
     OPEN c_deteccoes;
-    DBMS_OUTPUT.PUT_LINE('RELATÓRIO DE DETECÇÕES POR ESPECIE:');
-    DBMS_OUTPUT.PUT_LINE('-----------------------------');
+    
+    -- Loop para iterar sobre as detecções
     LOOP
-        FETCH c_deteccoes INTO v_nome_especie, v_total_deteccoes;
+        -- Buscando os dados de cada detecção
+        FETCH c_deteccoes INTO v_id_deteccao, v_url_imagem, v_data_deteccao, v_nome_usuario, v_especie_detectada;
+        
+        -- Saindo do loop quando não houver mais dados
         EXIT WHEN c_deteccoes%NOTFOUND;
-        -- Tomada de decisão: Se o total de detecções for maior que o limite, imprima uma mensagem de aviso
-        IF v_total_deteccoes > v_limite_deteccoes THEN
-            DBMS_OUTPUT.PUT_LINE('Espécie: ' || v_nome_especie || ', Total de detecções: ' || v_total_deteccoes || '. Número alto de detecções!');
+        
+        -- Tomada de decisão baseada na data da detecção
+        IF v_data_deteccao > TO_DATE('2023-06-15', 'YYYY-MM-DD') THEN
+            -- Exibindo informações das detecções feitas após 1 de janeiro de 2023
+            DBMS_OUTPUT.PUT_LINE('ID da Detecção: ' || v_id_deteccao || ', URL da Imagem: ' || v_url_imagem || ', Data da Detecção: ' || v_data_deteccao || ', Nome do Usuário: ' || v_nome_usuario || ', Espécie Detectada: ' || v_especie_detectada);
         ELSE
-            DBMS_OUTPUT.PUT_LINE('Espécie: ' || v_nome_especie || ', Total de detecções: ' || v_total_deteccoes);
+            -- Exibindo informações das detecções feitas antes ou em 1 de janeiro de 2023
+            DBMS_OUTPUT.PUT_LINE('Detecção anterior a 2023: ' || v_id_deteccao);
         END IF;
     END LOOP;
+    
+    -- Fechando o cursor
     CLOSE c_deteccoes;
+    
+EXCEPTION
+    WHEN OTHERS THEN
+        -- Exceção geral
+        DBMS_OUTPUT.PUT_LINE('Erro ao processar as detecções.');
 END;
+
 
 /*
 BLOCO ANONIMO 2: Determinar o gênero com mais detecções usando cursor
@@ -483,61 +503,63 @@ BLOCO ANONIMO 2: Determinar o gênero com mais detecções usando cursor
 - Tomada de Decisão
 */
 DECLARE
-    CURSOR c_deteccoes_por_genero IS
-        SELECT u.genero, COUNT(*) AS total_deteccoes
-        FROM deteccao d
-        JOIN usuario u ON d.usuario_id = u.id_usuario
-        GROUP BY u.genero;
+    -- Declaração de cursores explícitos para os usuários masculinos e femininos
+    CURSOR cur_masculinos IS
+        SELECT nome, genero
+        FROM usuario
+        WHERE TRIM(genero) = 'M';
 
-    v_total_deteccoes_M NUMBER := 0; -- Variável para armazenar o total de detecções para o gênero masculino
-    v_total_deteccoes_F NUMBER := 0; -- Variável para armazenar o total de detecções para o gênero feminino
-    v_genero usuario.genero%TYPE;
-    v_total_deteccoes NUMBER;
+    CURSOR cur_femininos IS
+        SELECT nome, genero
+        FROM usuario
+        WHERE TRIM(genero) = 'F';
+
+    -- Variáveis para armazenar a quantidade de usuários masculinos e femininos
+    v_qtd_masculinos INTEGER := 0;
+    v_qtd_femininos INTEGER := 0;
+
+    -- Variáveis para armazenar os resultados dos cursores
+    v_nome_usuario usuario.nome%TYPE;
+    v_genero_usuario usuario.genero%TYPE;
+
 BEGIN
-    OPEN c_deteccoes_por_genero;
-    LOOP
-        FETCH c_deteccoes_por_genero INTO v_genero, v_total_deteccoes;
-        EXIT WHEN c_deteccoes_por_genero%NOTFOUND;
-
-        IF v_genero = 'M' THEN
-            v_total_deteccoes_M := v_total_deteccoes_M + v_total_deteccoes;
-        ELSIF v_genero = 'F' THEN
-            v_total_deteccoes_F := v_total_deteccoes_F + v_total_deteccoes;
-        END IF;
-    END LOOP;
-    CLOSE c_deteccoes_por_genero;
     -- Imprimir relatório
-    DBMS_OUTPUT.PUT_LINE('RELATÓRIO DE DETECÇÕES POR GÊNERO:');
+    DBMS_OUTPUT.PUT_LINE('RELATÓRIO USUÁRIO POR GÊNERO:');
     DBMS_OUTPUT.PUT_LINE('-----------------------------');
-
-    -- Reabrir o cursor para imprimir os resultados
-    OPEN c_deteccoes_por_genero;
-
-    LOOP
-        FETCH c_deteccoes_por_genero INTO v_genero, v_total_deteccoes;
-        EXIT WHEN c_deteccoes_por_genero%NOTFOUND;
-
-        DBMS_OUTPUT.PUT_LINE('Gênero: ' || v_genero || ' - Total de detecções: ' || v_total_deteccoes);
+    -- Obtendo a quantidade de usuários masculinos
+    FOR masculino_rec IN cur_masculinos LOOP
+        v_nome_usuario := masculino_rec.nome;
+        v_genero_usuario := masculino_rec.genero;
+        v_qtd_masculinos := v_qtd_masculinos + 1;
     END LOOP;
 
-    -- Fechando o cursor novamente
-    CLOSE c_deteccoes_por_genero;
+    -- Obtendo a quantidade de usuários femininos
+    FOR feminino_rec IN cur_femininos LOOP
+        v_nome_usuario := feminino_rec.nome;
+        v_genero_usuario := feminino_rec.genero;
+        v_qtd_femininos := v_qtd_femininos + 1;
+    END LOOP;
 
-    -- Tomada de Decisão: Comparar totais de detecções para determinar 
-    -- o gênero com mais detecções e imprimir resultado
-    IF v_total_deteccoes_M > v_total_deteccoes_F THEN
-        DBMS_OUTPUT.PUT_LINE('-----------------------------');
-        DBMS_OUTPUT.PUT_LINE('O gênero com mais detecções é: M');
-        DBMS_OUTPUT.PUT_LINE('Total de detecções para o gênero M: ' || v_total_deteccoes_M);
-    ELSIF v_total_deteccoes_F > v_total_deteccoes_M THEN
-        DBMS_OUTPUT.PUT_LINE('-----------------------------');
-        DBMS_OUTPUT.PUT_LINE('O gênero com mais detecções é: F');
-        DBMS_OUTPUT.PUT_LINE('Total de detecções para o gênero F: ' || v_total_deteccoes_F);
+    -- Verificando qual gênero tem mais usuários
+    IF v_qtd_masculinos > v_qtd_femininos THEN
+        -- Se o gênero masculino tem mais usuários, imprimir os nomes e gêneros dos usuários masculinos
+        DBMS_OUTPUT.PUT_LINE('Gênero predominante: Masculino');
+        FOR masculino_rec IN cur_masculinos LOOP
+            DBMS_OUTPUT.PUT_LINE('Nome: ' || masculino_rec.nome || ', Gênero: ' || masculino_rec.genero);
+        END LOOP;
+        -- Imprimir a quantidade de usuários femininos
+        DBMS_OUTPUT.PUT_LINE('Quantidade de usuárias femininas: ' || v_qtd_femininos);
+    ELSIF v_qtd_femininos > v_qtd_masculinos THEN
+        -- Se o gênero feminino tem mais usuários, imprimir os nomes e gêneros dos usuários femininos
+        DBMS_OUTPUT.PUT_LINE('Gênero predominante: Feminino');
+        FOR feminino_rec IN cur_femininos LOOP
+            DBMS_OUTPUT.PUT_LINE('Nome: ' || feminino_rec.nome || ', Gênero: ' || feminino_rec.genero);
+        END LOOP;
+        -- Imprimir a quantidade de usuários masculinos
+        DBMS_OUTPUT.PUT_LINE('Quantidade de usuários masculinos: ' || v_qtd_masculinos);
     ELSE
-        DBMS_OUTPUT.PUT_LINE('-----------------------------');
-        DBMS_OUTPUT.PUT_LINE('Há o mesmo número de detecções para ambos os gêneros.');
-        DBMS_OUTPUT.PUT_LINE('Total de detecções para o gênero M: ' || v_total_deteccoes_M);
-        DBMS_OUTPUT.PUT_LINE('Total de detecções para o gênero F: ' || v_total_deteccoes_F);
+        -- Se houver o mesmo número de usuários masculinos e femininos, imprimir a quantidade
+        DBMS_OUTPUT.PUT_LINE('Há o mesmo número de usuários para ambos os gêneros, com um total de ' || v_qtd_masculinos || ' usuários masculinos e ' || v_qtd_femininos || ' usuárias femininas.');
     END IF;
 END;
 
