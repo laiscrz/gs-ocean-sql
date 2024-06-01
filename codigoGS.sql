@@ -170,6 +170,7 @@ EXCEPTION
         v_sqlerrm := SUBSTR(SQLERRM, 1, 200); -- Limitando a mensagem a 200 caracteres
         INSERT INTO registro_log (username, nome_procedure, error_date, error_message, error_code)
         VALUES (USER, 'carregar_usuario', SYSDATE, v_sqlerrm, v_sqlcode);
+        DBMS_OUTPUT.PUT_LINE('Erro ao inserir usuário: O erro foi inserido na tabela de registro_log.');
 END carregar_usuario;
 
 /* ONG */
@@ -202,6 +203,7 @@ EXCEPTION
         v_sqlerrm := SUBSTR(SQLERRM, 1, 200); 
         INSERT INTO registro_log (username, nome_procedure, error_date, error_message, error_code)
         VALUES (USER, 'carregar_ong', SYSDATE, v_sqlerrm, v_sqlcode);
+        DBMS_OUTPUT.PUT_LINE('Erro ao inserir ONG: O erro foi inserido na tabela de registro_log.');
 END carregar_ong;
 
 /* LOCALIZACAO */
@@ -234,6 +236,7 @@ EXCEPTION
         v_sqlerrm := SUBSTR(SQLERRM, 1, 200); 
         INSERT INTO registro_log (username, nome_procedure, error_date, error_message, error_code)
         VALUES (USER, 'carregar_localizacao', SYSDATE, v_sqlerrm, v_sqlcode);
+        DBMS_OUTPUT.PUT_LINE('Erro ao inserir localização: O erro foi inserido na tabela de registro_log.');
 END carregar_localizacao;
 
 /* CATEGORIA */
@@ -266,6 +269,7 @@ EXCEPTION
         v_sqlerrm := SUBSTR(SQLERRM, 1, 200); 
         INSERT INTO registro_log (username, nome_procedure, error_date, error_message, error_code)
         VALUES (USER, 'carregar_categoria', SYSDATE, v_sqlerrm, v_sqlcode);
+        DBMS_OUTPUT.PUT_LINE('Erro ao inserir categoria: O erro foi inserido na tabela de registro_log.');
 END carregar_categoria;
 
 /* SITUACAO */
@@ -297,6 +301,7 @@ EXCEPTION
         v_sqlerrm := SUBSTR(SQLERRM, 1, 200); 
         INSERT INTO registro_log (username, nome_procedure, error_date, error_message, error_code)
         VALUES (USER, 'carregar_situacao', SYSDATE, v_sqlerrm, v_sqlcode);
+        DBMS_OUTPUT.PUT_LINE('Erro ao inserir situacao: O erro foi inserido na tabela de registro_log.');
 END carregar_situacao;
 
 /* ESPECIE */
@@ -329,6 +334,7 @@ EXCEPTION
         v_sqlerrm := SUBSTR(SQLERRM, 1, 200); 
         INSERT INTO registro_log (username, nome_procedure, error_date, error_message, error_code)
         VALUES (USER, 'carregar_especie', SYSDATE, v_sqlerrm, v_sqlcode);
+        DBMS_OUTPUT.PUT_LINE('Erro ao inserir espécie: O erro foi inserido na tabela de registro_log.');
 END carregar_especie;
 
 /* DETECCAO */
@@ -361,6 +367,7 @@ EXCEPTION
         v_sqlerrm := SUBSTR(SQLERRM, 1, 200); 
         INSERT INTO registro_log (username, nome_procedure, error_date, error_message, error_code)
         VALUES (USER, 'carregar_deteccao', SYSDATE, v_sqlerrm, v_sqlcode);
+        DBMS_OUTPUT.PUT_LINE('Erro ao inserir detecção: O erro foi inserido na tabela de registro_log.');
 END carregar_deteccao;
 
 -- INSERIR através de parametros nos procedimentos
@@ -657,5 +664,3 @@ BEGIN
     -- Fecha o cursor
     CLOSE cur_dados_tabela;
 END;
-
-
