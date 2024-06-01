@@ -322,13 +322,13 @@ EXCEPTION
         v_sqlerrm := SUBSTR(SQLERRM, 1, 200); 
         INSERT INTO registro_log (username, nome_procedure, error_date, error_message, error_code)
         VALUES (USER, 'carregar_especie', SYSDATE, v_sqlerrm, v_sqlcode);
-        DBMS_OUTPUT.PUT_LINE('Erro ao inserir espécie: Já existe uma espécie com este ID.');
+        DBMS_OUTPUT.PUT_LINE('Erro ao inserir espécie: Já existe uma espécie com este ID. Para mais detalhes consulte a tabela registro_log.');
     WHEN VALUE_ERROR THEN
         v_sqlcode := SQLCODE;
         v_sqlerrm := SUBSTR(SQLERRM, 1, 200); 
         INSERT INTO registro_log (username, nome_procedure, error_date, error_message, error_code)
         VALUES (USER, 'carregar_especie', SYSDATE,  v_sqlerrm, v_sqlcode);
-        DBMS_OUTPUT.PUT_LINE('Erro ao inserir espécie: Verifique se os tipos de dados estão corretos.');
+        DBMS_OUTPUT.PUT_LINE('Erro ao inserir espécie: Verifique se os tipos de dados estão corretos. Para mais detalhes consulte a tabela registro_log.');
     WHEN OTHERS THEN
         v_sqlcode := SQLCODE;
         v_sqlerrm := SUBSTR(SQLERRM, 1, 200); 
@@ -355,13 +355,13 @@ EXCEPTION
         v_sqlerrm := SUBSTR(SQLERRM, 1, 200); 
         INSERT INTO registro_log (username, nome_procedure, error_date, error_message, error_code)
         VALUES (USER, 'carregar_deteccao', SYSDATE, v_sqlerrm, v_sqlcode);
-        DBMS_OUTPUT.PUT_LINE('Erro ao inserir detecção: Já existe uma detecção com este ID.');
+        DBMS_OUTPUT.PUT_LINE('Erro ao inserir detecção: Já existe uma detecção com este ID. Para mais detalhes consulte a tabela registro_log.');
     WHEN VALUE_ERROR THEN
         v_sqlcode := SQLCODE;
         v_sqlerrm := SUBSTR(SQLERRM, 1, 200); 
         INSERT INTO registro_log (username, nome_procedure, error_date, error_message, error_code)
         VALUES (USER, 'carregar_deteccao', SYSDATE,  v_sqlerrm, v_sqlcode);
-        DBMS_OUTPUT.PUT_LINE('Erro ao inserir detecção: Verifique se os tipos de dados estão corretos.');
+        DBMS_OUTPUT.PUT_LINE('Erro ao inserir detecção: Verifique se os tipos de dados estão corretos. Para mais detalhes consulte a tabela registro_log.');
     WHEN OTHERS THEN
         v_sqlcode := SQLCODE;
         v_sqlerrm := SUBSTR(SQLERRM, 1, 200); 
