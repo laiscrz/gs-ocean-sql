@@ -257,13 +257,13 @@ EXCEPTION
         v_sqlerrm := SUBSTR(SQLERRM, 1, 200); 
         INSERT INTO registro_log (username, nome_procedure, error_date, error_message, error_code)
         VALUES (USER, 'carregar_categoria', SYSDATE, v_sqlerrm, v_sqlcode);
-        DBMS_OUTPUT.PUT_LINE('Erro ao inserir categoria: Já existe uma categoria com este ID.');
+        DBMS_OUTPUT.PUT_LINE('Erro ao inserir categoria: Já existe uma categoria com este ID. Para mais detalhes consulte a tabela registro_log.');
     WHEN VALUE_ERROR THEN
         v_sqlcode := SQLCODE;
         v_sqlerrm := SUBSTR(SQLERRM, 1, 200); 
         INSERT INTO registro_log (username, nome_procedure, error_date, error_message, error_code)
         VALUES (USER, 'carregar_categoria', SYSDATE,  v_sqlerrm, v_sqlcode);
-        DBMS_OUTPUT.PUT_LINE('Erro ao inserir categoria: Verifique se os tipos de dados estão corretos.');
+        DBMS_OUTPUT.PUT_LINE('Erro ao inserir categoria: Verifique se os tipos de dados estão corretos. Para mais detalhes consulte a tabela registro_log.');
     WHEN OTHERS THEN
         v_sqlcode := SQLCODE;
         v_sqlerrm := SUBSTR(SQLERRM, 1, 200); 
@@ -289,13 +289,13 @@ EXCEPTION
         v_sqlerrm := SUBSTR(SQLERRM, 1, 200); 
         INSERT INTO registro_log (username, nome_procedure, error_date, error_message, error_code)
         VALUES (USER, 'carregar_situacao', SYSDATE, v_sqlerrm, v_sqlcode);
-        DBMS_OUTPUT.PUT_LINE('Erro ao inserir situação: Já existe uma situação com este ID.');
+        DBMS_OUTPUT.PUT_LINE('Erro ao inserir situação: Já existe uma situação com este ID. Para mais detalhes consulte a tabela registro_log.');
     WHEN VALUE_ERROR THEN
         v_sqlcode := SQLCODE;
         v_sqlerrm := SUBSTR(SQLERRM, 1, 200); 
         INSERT INTO registro_log (username, nome_procedure, error_date, error_message, error_code)
         VALUES (USER, 'carregar_situacao', SYSDATE,  v_sqlerrm, v_sqlcode);
-        DBMS_OUTPUT.PUT_LINE('Erro ao inserir situação: Verifique se os tipos de dados estão corretos.');
+        DBMS_OUTPUT.PUT_LINE('Erro ao inserir situação: Verifique se os tipos de dados estão corretos. Para mais detalhes consulte a tabela registro_log.');
     WHEN OTHERS THEN
         v_sqlcode := SQLCODE;
         v_sqlerrm := SUBSTR(SQLERRM, 1, 200); 
