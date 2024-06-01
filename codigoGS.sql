@@ -51,7 +51,7 @@ CREATE TABLE ong (
     nome VARCHAR2(60),                      -- Nome da ONG
     email VARCHAR2(30),                     -- Endereço de e-mail da ONG
     telefone VARCHAR2(12),                   -- Número de telefone da ONG
-    deteccao_id NUMBER(8) NOT NULL           -- ID da DETECCAO que que ong recebe (chave estrangeira)
+    deteccao_id NUMBER(8) NOT NULL           -- ID da DETECCAO que ong recebe (chave estrangeira)
 );
 
 /* Tabela para armazenar informações de localização geográfica */
