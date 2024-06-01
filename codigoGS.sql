@@ -407,7 +407,6 @@ BEGIN
     carregar_situacao(42, 'N', 'N');
     carregar_situacao(43, 'S', 'S');
     carregar_situacao(44, 'N', 'S');
-    carregar_situacao(45, 'S', 'N');
     COMMIT;
 END;
 
@@ -417,7 +416,7 @@ BEGIN
     carregar_especie(52, 'Baleia Jubarte', 'Megaptera novaeangliae', 'Grande mamífero marinho.', 42, 32);
     carregar_especie(53, 'Polvo', 'Octopus vulgaris', 'Molusco marinho com oito tentáculos.', 43, 34);
     carregar_especie(54, 'Tubarão Branco', 'Carcharodon carcharias', 'Grande tubarão predador.', 44, 35);
-    carregar_especie(55, 'Peixe-palhaço', 'Amphiprion ocellaris', 'Peixe popular em aquários.', 45, 31);
+    carregar_especie(55, 'Peixe-palhaço', 'Amphiprion ocellaris', 'Peixe popular em aquários.', 41, 31);
     carregar_especie(56, 'Água-viva Comum', 'Aurelia aurita', 'Espécie de água-viva.', 42, 33);
     COMMIT;
 END;
