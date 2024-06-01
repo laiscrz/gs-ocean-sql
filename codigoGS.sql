@@ -158,13 +158,13 @@ EXCEPTION
         v_sqlerrm := SUBSTR(SQLERRM, 1, 200);
         INSERT INTO registro_log (username, nome_procedure, error_date, error_message, error_code)
         VALUES (USER, 'carregar_usuario', SYSDATE, v_sqlerrm, v_sqlcode);
-        DBMS_OUTPUT.PUT_LINE('Erro ao inserir usuario: Já existe um usuario com este ID.');
+        DBMS_OUTPUT.PUT_LINE('Erro ao inserir usuario: Já existe um usuario com este ID. Para mais detalhes consulte a tabela registro_log.');
     WHEN VALUE_ERROR THEN
         v_sqlcode := SQLCODE;
         v_sqlerrm := SUBSTR(SQLERRM, 1, 200); 
         INSERT INTO registro_log (username, nome_procedure, error_date, error_message, error_code)
         VALUES (USER, 'carregar_usuario', SYSDATE,  v_sqlerrm, v_sqlcode);
-        DBMS_OUTPUT.PUT_LINE('Erro ao inserir usuario: Verifique se os tipos de dados estão corretos.');
+        DBMS_OUTPUT.PUT_LINE('Erro ao inserir usuario: Verifique se os tipos de dados estão corretos. Para mais detalhes consulte a tabela registro_log.');
     WHEN OTHERS THEN
         v_sqlcode := SQLCODE;
         v_sqlerrm := SUBSTR(SQLERRM, 1, 200); -- Limitando a mensagem a 200 caracteres
@@ -191,13 +191,13 @@ EXCEPTION
         v_sqlerrm := SUBSTR(SQLERRM, 1, 200); -- Limitando a mensagem a 200 caracteres
         INSERT INTO registro_log (username, nome_procedure, error_date, error_message, error_code)
         VALUES (USER, 'carregar_ong', SYSDATE, v_sqlerrm, v_sqlcode);
-        DBMS_OUTPUT.PUT_LINE('Erro ao inserir ONG: Já existe uma ONG com este ID.');
+        DBMS_OUTPUT.PUT_LINE('Erro ao inserir ONG: Já existe uma ONG com este ID. Para mais detalhes consulte a tabela registro_log.');
     WHEN VALUE_ERROR THEN
         v_sqlcode := SQLCODE;
         v_sqlerrm := SUBSTR(SQLERRM, 1, 200); -- Limitando a mensagem a 200 caracteres
         INSERT INTO registro_log (username, nome_procedure, error_date, error_message, error_code)
         VALUES (USER, 'carregar_ong', SYSDATE,  v_sqlerrm, v_sqlcode);
-        DBMS_OUTPUT.PUT_LINE('Erro ao inserir ONG: Verifique se os tipos de dados estão corretos.');
+        DBMS_OUTPUT.PUT_LINE('Erro ao inserir ONG: Verifique se os tipos de dados estão corretos. Para mais detalhes consulte a tabela registro_log.');
     WHEN OTHERS THEN
         v_sqlcode := SQLCODE;
         v_sqlerrm := SUBSTR(SQLERRM, 1, 200); 
@@ -224,13 +224,13 @@ EXCEPTION
         v_sqlerrm := SUBSTR(SQLERRM, 1, 200); 
         INSERT INTO registro_log (username, nome_procedure, error_date, error_message, error_code)
         VALUES (USER, 'carregar_localizacao', SYSDATE, v_sqlerrm, v_sqlcode);
-        DBMS_OUTPUT.PUT_LINE('Erro ao inserir localização: Já existe uma localização com este ID.');
+        DBMS_OUTPUT.PUT_LINE('Erro ao inserir localização: Já existe uma localização com este ID. Para mais detalhes consulte a tabela registro_log.');
     WHEN VALUE_ERROR THEN
         v_sqlcode := SQLCODE;
         v_sqlerrm := SUBSTR(SQLERRM, 1, 200); 
         INSERT INTO registro_log (username, nome_procedure, error_date, error_message, error_code)
         VALUES (USER, 'carregar_localizacao', SYSDATE,  v_sqlerrm, v_sqlcode);
-        DBMS_OUTPUT.PUT_LINE('Erro ao inserir localização: Verifique se os tipos de dados estão corretos.');
+        DBMS_OUTPUT.PUT_LINE('Erro ao inserir localização: Verifique se os tipos de dados estão corretos. Para mais detalhes consulte a tabela registro_log.');
     WHEN OTHERS THEN
         v_sqlcode := SQLCODE;
         v_sqlerrm := SUBSTR(SQLERRM, 1, 200); 
