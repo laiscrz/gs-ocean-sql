@@ -590,6 +590,9 @@ DECLARE
     v_nome_especie especie.nome_comum%TYPE;
     v_em_risco_extincao situacao.risco_extincao%TYPE;
 BEGIN
+     -- Imprimir relatório
+    DBMS_OUTPUT.PUT_LINE('RELATÓRIO ESPECIES EM RISCO:');
+    DBMS_OUTPUT.PUT_LINE('-----------------------------');
     -- Abrir o cursor
     OPEN c_especies_em_risco;
 
@@ -611,6 +614,13 @@ BEGIN
 
     -- Fechar o cursor
     CLOSE c_especies_em_risco;
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        DBMS_OUTPUT.PUT_LINE('Nenhum dado encontrado.');
+    WHEN INVALID_CURSOR THEN
+        DBMS_OUTPUT.PUT_LINE('Cursor inválido.');
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE('Erro ao processar as espécies: ' || SQLERRM);
 END;
 
 /*
