@@ -486,7 +486,7 @@ BEGIN
             DBMS_OUTPUT.PUT_LINE('ID da Detecção: ' || v_id_deteccao || ', URL da Imagem: ' || v_url_imagem || ', Data da Detecção: ' || v_data_deteccao || ', Nome do Usuário: ' || v_nome_usuario || ', Espécie Detectada: ' || v_especie_detectada);
         ELSE
             -- Exibindo informações das detecções feitas antes ou em 1 de janeiro de 2023
-            DBMS_OUTPUT.PUT_LINE('Detecção anterior a 2023: ' || v_id_deteccao);
+            DBMS_OUTPUT.PUT_LINE('Detecção anterior a 2023-06: ' || v_id_deteccao);
         END IF;
     END LOOP;
     
@@ -494,9 +494,12 @@ BEGIN
     CLOSE c_deteccoes;
     
 EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        DBMS_OUTPUT.PUT_LINE('Nenhum dado encontrado.');
+    WHEN INVALID_CURSOR THEN
+        DBMS_OUTPUT.PUT_LINE('Cursor inválido.');
     WHEN OTHERS THEN
-        -- Exceção geral
-        DBMS_OUTPUT.PUT_LINE('Erro ao processar as detecções.');
+        DBMS_OUTPUT.PUT_LINE('Erro ao processar as detecções: ' || SQLERRM);
 END;
 
 
