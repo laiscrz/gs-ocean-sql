@@ -701,8 +701,16 @@ BEGIN
     END LOOP;
     
     -- Imprime sumarizações numéricas
-    DBMS_OUTPUT.PUT_LINE('--- Sumarizações Numéricas ---');
+    DBMS_OUTPUT.PUT_LINE('-----------------------------');
+    DBMS_OUTPUT.PUT_LINE('--- SUMARIZAÇÕES NUMÉRICAS - Resultados ---');
     DBMS_OUTPUT.PUT_LINE('Total de registros de espécies geral: ' || total_registros);
     DBMS_OUTPUT.PUT_LINE('Total de situações distintas geral : ' || total_situacoes);
     DBMS_OUTPUT.PUT_LINE('-----------------------------');
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        DBMS_OUTPUT.PUT_LINE('Nenhum dado encontrado.');
+    WHEN INVALID_CURSOR THEN
+        DBMS_OUTPUT.PUT_LINE('Cursor inválido.');
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE('Erro ao processar os dados: ' || SQLERRM);
 END;
