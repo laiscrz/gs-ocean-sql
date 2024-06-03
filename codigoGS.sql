@@ -44,16 +44,6 @@ CREATE TABLE usuario (
     senha VARCHAR2(20)                     -- Senha do usuário
 );
 
-/* Tabela para armazenar informações das organizações não governamentais (ONGs) */
-CREATE TABLE ong (
-    id_ong NUMBER(8) PRIMARY KEY,          -- ID único da ONG
-    cnpj VARCHAR2(14),                      -- CNPJ da ONG
-    nome VARCHAR2(60),                      -- Nome da ONG
-    email VARCHAR2(30),                     -- Endereço de e-mail da ONG
-    telefone VARCHAR2(12),                   -- Número de telefone da ONG
-    deteccao_id NUMBER(8) NOT NULL           -- ID da DETECCAO que ong recebe (chave estrangeira)
-);
-
 /* Tabela para armazenar informações de localização geográfica */
 CREATE TABLE localizacao (
     id_localizacao NUMBER(8) PRIMARY KEY,   -- ID único da localização
@@ -100,6 +90,15 @@ CREATE TABLE deteccao (
     localizacao_id NUMBER(8) NOT NULL        -- ID da localização da detecção (chave estrangeira)
 );
 
+/* Tabela para armazenar informações das organizações não governamentais (ONGs) */
+CREATE TABLE ong (
+    id_ong NUMBER(8) PRIMARY KEY,          -- ID único da ONG
+    cnpj VARCHAR2(14),                      -- CNPJ da ONG
+    nome VARCHAR2(60),                      -- Nome da ONG
+    email VARCHAR2(30),                     -- Endereço de e-mail da ONG
+    telefone VARCHAR2(12),                   -- Número de telefone da ONG
+    deteccao_id NUMBER(8) NOT NULL           -- ID da DETECCAO que ong recebe (chave estrangeira)
+);
 
 /* ALTERS TABLES */
 /*ADD Chaves Extrangeiras - relacionamentos*/
@@ -137,12 +136,12 @@ SET VERIFY OFF;
 
 /*DROPS PROCEDURES DE CARGA DE DADOS*/
 DROP PROCEDURE carregar_usuario;
-DROP PROCEDURE carregar_ong;
 DROP PROCEDURE carregar_localizacao;
 DROP PROCEDURE carregar_categoria;
 DROP PROCEDURE carregar_situacao;
 DROP PROCEDURE carregar_especie;
 DROP PROCEDURE carregar_deteccao;
+DROP PROCEDURE carregar_ong;
 
 /* USUARIO */
 -- Procedure para inserir/carregar dados na tabela usuario
@@ -176,40 +175,6 @@ EXCEPTION
         VALUES (USER, 'carregar_usuario', SYSDATE, v_sqlerrm, v_sqlcode);
         DBMS_OUTPUT.PUT_LINE('Erro ao inserir usuário: O erro foi inserido na tabela de registro_log.');
 END carregar_usuario;
-
-/* ONG */
--- Procedure para inserir/carregar dados na tabela ong
-CREATE OR REPLACE PROCEDURE carregar_ong (
-    p_id_ong IN NUMBER,p_cnpj IN VARCHAR2,p_nome IN VARCHAR2,
-    p_email IN VARCHAR2,p_telefone IN VARCHAR2, p_deteccao_id IN NUMBER)
-AS 
-    v_sqlcode NUMBER;
-    v_sqlerrm VARCHAR2(200); 
-BEGIN
-    INSERT INTO ong (id_ong, cnpj, nome, email, telefone, deteccao_id)
-    VALUES (p_id_ong, p_cnpj, p_nome, p_email, p_telefone, p_deteccao_id);  
-    COMMIT;
-    DBMS_OUTPUT.PUT_LINE('ONG: ' || p_nome || ' inserida com sucesso.');
-EXCEPTION
-    WHEN DUP_VAL_ON_INDEX THEN
-        v_sqlcode := SQLCODE;
-        v_sqlerrm := SUBSTR(SQLERRM, 1, 200); -- Limitando a mensagem a 200 caracteres
-        INSERT INTO registro_log (username, nome_procedure, error_date, error_message, error_code)
-        VALUES (USER, 'carregar_ong', SYSDATE, v_sqlerrm, v_sqlcode);
-        DBMS_OUTPUT.PUT_LINE('Erro ao inserir ONG: Já existe uma ONG com este ID. Para mais detalhes consulte a tabela registro_log.');
-    WHEN VALUE_ERROR THEN
-        v_sqlcode := SQLCODE;
-        v_sqlerrm := SUBSTR(SQLERRM, 1, 200); -- Limitando a mensagem a 200 caracteres
-        INSERT INTO registro_log (username, nome_procedure, error_date, error_message, error_code)
-        VALUES (USER, 'carregar_ong', SYSDATE,  v_sqlerrm, v_sqlcode);
-        DBMS_OUTPUT.PUT_LINE('Erro ao inserir ONG: Verifique se os tipos de dados estão corretos. Para mais detalhes consulte a tabela registro_log.');
-    WHEN OTHERS THEN
-        v_sqlcode := SQLCODE;
-        v_sqlerrm := SUBSTR(SQLERRM, 1, 200); 
-        INSERT INTO registro_log (username, nome_procedure, error_date, error_message, error_code)
-        VALUES (USER, 'carregar_ong', SYSDATE, v_sqlerrm, v_sqlcode);
-        DBMS_OUTPUT.PUT_LINE('Erro ao inserir ONG: O erro foi inserido na tabela de registro_log.');
-END carregar_ong;
 
 /* LOCALIZACAO */
 -- Procedure para inserir/carregar dados na tabela localizacao
@@ -379,6 +344,40 @@ EXCEPTION
         VALUES (USER, 'carregar_deteccao', SYSDATE, v_sqlerrm, v_sqlcode);
         DBMS_OUTPUT.PUT_LINE('Erro ao inserir detecção: O erro foi inserido na tabela de registro_log.');
 END carregar_deteccao;
+
+/* ONG */
+-- Procedure para inserir/carregar dados na tabela ong
+CREATE OR REPLACE PROCEDURE carregar_ong (
+    p_id_ong IN NUMBER,p_cnpj IN VARCHAR2,p_nome IN VARCHAR2,
+    p_email IN VARCHAR2,p_telefone IN VARCHAR2, p_deteccao_id IN NUMBER)
+AS 
+    v_sqlcode NUMBER;
+    v_sqlerrm VARCHAR2(200); 
+BEGIN
+    INSERT INTO ong (id_ong, cnpj, nome, email, telefone, deteccao_id)
+    VALUES (p_id_ong, p_cnpj, p_nome, p_email, p_telefone, p_deteccao_id);  
+    COMMIT;
+    DBMS_OUTPUT.PUT_LINE('ONG: ' || p_nome || ' inserida com sucesso.');
+EXCEPTION
+    WHEN DUP_VAL_ON_INDEX THEN
+        v_sqlcode := SQLCODE;
+        v_sqlerrm := SUBSTR(SQLERRM, 1, 200); -- Limitando a mensagem a 200 caracteres
+        INSERT INTO registro_log (username, nome_procedure, error_date, error_message, error_code)
+        VALUES (USER, 'carregar_ong', SYSDATE, v_sqlerrm, v_sqlcode);
+        DBMS_OUTPUT.PUT_LINE('Erro ao inserir ONG: Já existe uma ONG com este ID. Para mais detalhes consulte a tabela registro_log.');
+    WHEN VALUE_ERROR THEN
+        v_sqlcode := SQLCODE;
+        v_sqlerrm := SUBSTR(SQLERRM, 1, 200); -- Limitando a mensagem a 200 caracteres
+        INSERT INTO registro_log (username, nome_procedure, error_date, error_message, error_code)
+        VALUES (USER, 'carregar_ong', SYSDATE,  v_sqlerrm, v_sqlcode);
+        DBMS_OUTPUT.PUT_LINE('Erro ao inserir ONG: Verifique se os tipos de dados estão corretos. Para mais detalhes consulte a tabela registro_log.');
+    WHEN OTHERS THEN
+        v_sqlcode := SQLCODE;
+        v_sqlerrm := SUBSTR(SQLERRM, 1, 200); 
+        INSERT INTO registro_log (username, nome_procedure, error_date, error_message, error_code)
+        VALUES (USER, 'carregar_ong', SYSDATE, v_sqlerrm, v_sqlcode);
+        DBMS_OUTPUT.PUT_LINE('Erro ao inserir ONG: O erro foi inserido na tabela de registro_log.');
+END carregar_ong;
 
 -- INSERIR através de parametros nos procedimentos
 /* INSERINDO EM USUARIO */
