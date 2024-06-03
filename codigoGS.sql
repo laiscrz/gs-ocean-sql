@@ -223,6 +223,7 @@ BEGIN
     INSERT INTO localizacao (id_localizacao, latitude, longitude, cidade, estado, pais)
     VALUES (p_id_localizacao, p_latitude, p_longitude, p_cidade, p_estado, p_pais);  
     COMMIT;
+    DBMS_OUTPUT.PUT_LINE('Localização: ' || p_cidade || ', ' || p_estado || ', ' || p_pais || ' inserida com sucesso.');
 EXCEPTION
     WHEN DUP_VAL_ON_INDEX THEN
         v_sqlcode := SQLCODE;
@@ -256,6 +257,7 @@ BEGIN
     INSERT INTO categoria (id_categoria, nome, habitat, reino, familia)
     VALUES (p_id_categoria, p_nome, p_habitat, p_reino, p_familia);  
     COMMIT;
+    DBMS_OUTPUT.PUT_LINE('Categoria: ' || p_nome || ' inserida com sucesso.');
 EXCEPTION
     WHEN DUP_VAL_ON_INDEX THEN
         v_sqlcode := SQLCODE;
@@ -288,6 +290,7 @@ BEGIN
     INSERT INTO situacao (id_situacao, risco_extincao, invasora)
     VALUES (p_id_situacao, p_risco_extincao, p_invasora);  
     COMMIT;
+    DBMS_OUTPUT.PUT_LINE('Situação inserida com sucesso.');
 EXCEPTION
     WHEN DUP_VAL_ON_INDEX THEN
         v_sqlcode := SQLCODE;
