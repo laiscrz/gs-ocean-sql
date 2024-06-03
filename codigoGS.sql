@@ -324,6 +324,7 @@ BEGIN
     INSERT INTO especie (id_especie, nome_comum, nome_cientifico, descricao, situacao_id, categoria_id)
     VALUES (p_id_especie, p_nome_comum, p_nome_cientifico, p_descricao, p_situacao_id, p_categoria_id);  
     COMMIT;
+    DBMS_OUTPUT.PUT_LINE('Espécie ' || p_nome_comum || ' inserida (o) com sucesso.');
 EXCEPTION
     WHEN DUP_VAL_ON_INDEX THEN
         v_sqlcode := SQLCODE;
@@ -357,6 +358,7 @@ BEGIN
     INSERT INTO deteccao (id_deteccao, url_imagem, data_deteccao, usuario_id, especie_id, localizacao_id)
     VALUES (p_id_deteccao, p_url_imagem, p_data_deteccao, p_usuario_id, p_especie_id, p_localizacao_id);  
     COMMIT;
+    DBMS_OUTPUT.PUT_LINE('Detecção inserida com sucesso.');
 EXCEPTION
     WHEN DUP_VAL_ON_INDEX THEN
         v_sqlcode := SQLCODE;
