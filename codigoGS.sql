@@ -466,6 +466,9 @@ DECLARE
     v_especie_detectada especie.nome_comum%TYPE;
     
 BEGIN
+    -- Imprimir relatório
+    DBMS_OUTPUT.PUT_LINE('RELATÓRIO DETEÇÕES MAIS RECENTES(DATA):');
+    DBMS_OUTPUT.PUT_LINE('-----------------------------');
     -- Abrindo o cursor
     OPEN c_deteccoes;
     
@@ -683,7 +686,3 @@ BEGIN
     DBMS_OUTPUT.PUT_LINE('Total de situações distintas geral : ' || total_situacoes);
     DBMS_OUTPUT.PUT_LINE('-----------------------------');
 END;
-
-
-
-
