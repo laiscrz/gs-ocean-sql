@@ -567,6 +567,13 @@ BEGIN
         -- Se houver o mesmo número de usuários masculinos e femininos, imprimir a quantidade
         DBMS_OUTPUT.PUT_LINE('Há o mesmo número de usuários para ambos os gêneros, com um total de ' || v_qtd_masculinos || ' usuários masculinos e ' || v_qtd_femininos || ' usuárias femininas.');
     END IF;
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        DBMS_OUTPUT.PUT_LINE('Nenhum dado encontrado.');
+    WHEN INVALID_CURSOR THEN
+        DBMS_OUTPUT.PUT_LINE('Cursor inválido.');
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE('Erro ao processar os usuários: ' || SQLERRM);
 END;
 
 /*
