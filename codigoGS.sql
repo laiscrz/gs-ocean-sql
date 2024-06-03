@@ -155,6 +155,7 @@ BEGIN
     INSERT INTO usuario (id_usuario, nome, genero, email, senha)
     VALUES (p_id_usuario, p_nome, p_genero, p_email, p_senha);  
     COMMIT;
+    DBMS_OUTPUT.PUT_LINE('Usuario: ' || p_nome || ' inserido com sucesso.');
 EXCEPTION
     WHEN DUP_VAL_ON_INDEX THEN
         v_sqlcode := SQLCODE;
@@ -188,6 +189,7 @@ BEGIN
     INSERT INTO ong (id_ong, cnpj, nome, email, telefone, deteccao_id)
     VALUES (p_id_ong, p_cnpj, p_nome, p_email, p_telefone, p_deteccao_id);  
     COMMIT;
+    DBMS_OUTPUT.PUT_LINE('ONG: ' || p_nome || ' inserida com sucesso.');
 EXCEPTION
     WHEN DUP_VAL_ON_INDEX THEN
         v_sqlcode := SQLCODE;
