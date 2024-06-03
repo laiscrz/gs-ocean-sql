@@ -541,35 +541,56 @@ BEGIN
     -- Imprimir relatório
     DBMS_OUTPUT.PUT_LINE('RELATÓRIO USUÁRIO POR GÊNERO:');
     DBMS_OUTPUT.PUT_LINE('-----------------------------');
+
+    -- Abrir o cursor de usuários masculinos
+    OPEN cur_masculinos;
     -- Obtendo a quantidade de usuários masculinos
-    FOR masculino_rec IN cur_masculinos LOOP
-        v_nome_usuario := masculino_rec.nome;
-        v_genero_usuario := masculino_rec.genero;
+    LOOP
+        FETCH cur_masculinos INTO v_nome_usuario, v_genero_usuario;
+        EXIT WHEN cur_masculinos%NOTFOUND;
         v_qtd_masculinos := v_qtd_masculinos + 1;
     END LOOP;
+    -- Fechar o cursor de usuários masculinos
+    CLOSE cur_masculinos;
 
+    -- Abrir o cursor de usuários femininos
+    OPEN cur_femininos;
     -- Obtendo a quantidade de usuários femininos
-    FOR feminino_rec IN cur_femininos LOOP
-        v_nome_usuario := feminino_rec.nome;
-        v_genero_usuario := feminino_rec.genero;
+    LOOP
+        FETCH cur_femininos INTO v_nome_usuario, v_genero_usuario;
+        EXIT WHEN cur_femininos%NOTFOUND;
         v_qtd_femininos := v_qtd_femininos + 1;
     END LOOP;
+    -- Fechar o cursor de usuários femininos
+    CLOSE cur_femininos;
 
     -- Verificando qual gênero tem mais usuários
     IF v_qtd_masculinos > v_qtd_femininos THEN
         -- Se o gênero masculino tem mais usuários, imprimir os nomes e gêneros dos usuários masculinos
         DBMS_OUTPUT.PUT_LINE('Gênero predominante: Masculino');
-        FOR masculino_rec IN cur_masculinos LOOP
-            DBMS_OUTPUT.PUT_LINE('Nome: ' || masculino_rec.nome || ', Gênero: ' || masculino_rec.genero);
+        -- Reabrir o cursor de usuários masculinos
+        OPEN cur_masculinos;
+        LOOP
+            FETCH cur_masculinos INTO v_nome_usuario, v_genero_usuario;
+            EXIT WHEN cur_masculinos%NOTFOUND;
+            DBMS_OUTPUT.PUT_LINE('Nome: ' || v_nome_usuario || ', Gênero: ' || v_genero_usuario);
         END LOOP;
+        -- Fechar o cursor de usuários masculinos
+        CLOSE cur_masculinos;
         -- Imprimir a quantidade de usuários femininos
         DBMS_OUTPUT.PUT_LINE('Quantidade de usuárias femininas: ' || v_qtd_femininos);
     ELSIF v_qtd_femininos > v_qtd_masculinos THEN
         -- Se o gênero feminino tem mais usuários, imprimir os nomes e gêneros dos usuários femininos
         DBMS_OUTPUT.PUT_LINE('Gênero predominante: Feminino');
-        FOR feminino_rec IN cur_femininos LOOP
-            DBMS_OUTPUT.PUT_LINE('Nome: ' || feminino_rec.nome || ', Gênero: ' || feminino_rec.genero);
+        -- Reabrir o cursor de usuários femininos
+        OPEN cur_femininos;
+        LOOP
+            FETCH cur_femininos INTO v_nome_usuario, v_genero_usuario;
+            EXIT WHEN cur_femininos%NOTFOUND;
+            DBMS_OUTPUT.PUT_LINE('Nome: ' || v_nome_usuario || ', Gênero: ' || v_genero_usuario);
         END LOOP;
+        -- Fechar o cursor de usuários femininos
+        CLOSE cur_femininos;
         -- Imprimir a quantidade de usuários masculinos
         DBMS_OUTPUT.PUT_LINE('Quantidade de usuários masculinos: ' || v_qtd_masculinos);
     ELSE
