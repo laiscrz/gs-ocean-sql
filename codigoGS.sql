@@ -96,9 +96,15 @@ CREATE TABLE ong (
     cnpj VARCHAR2(14),                      -- CNPJ da ONG
     nome VARCHAR2(60),                      -- Nome da ONG
     email VARCHAR2(30),                     -- Endereço de e-mail da ONG
-    telefone VARCHAR2(12),                   -- Número de telefone da ONG
-    deteccao_id NUMBER(8) NOT NULL           -- ID da DETECCAO que ong recebe (chave estrangeira)
+    telefone VARCHAR2(12)                   -- Número de telefone da ONG
 );
+
+/* Tabela de relação N:M entre ONG e detecção */
+CREATE TABLE ong_deteccao (
+    deteccao_id NUMBER(8) NOT NULL,       -- ID da detecção (chave estrangeira)
+    ong_id NUMBER(8) NOT NULL             -- ID da ONG (chave estrangeira)
+);
+
 
 /* ALTERS TABLES */
 /*ADD Chaves Extrangeiras - relacionamentos*/
@@ -110,9 +116,13 @@ ALTER TABLE deteccao ADD CONSTRAINT fk_deteccao_especie FOREIGN KEY ( especie_id
 ALTER TABLE deteccao ADD CONSTRAINT fk_deteccao_localizacao FOREIGN KEY ( localizacao_id ) REFERENCES localizacao ( id_localizacao );
 -- Chave estrangeira para relacionamento com a tabela usuario
 ALTER TABLE deteccao ADD CONSTRAINT fk_deteccao_usuario FOREIGN KEY ( usuario_id ) REFERENCES usuario ( id_usuario );
-/*Tabela -> ong*/
--- Chave estrangeira para relacionamento com a tabela deteccao
-ALTER TABLE ong ADD CONSTRAINT fk_ong_deteccao FOREIGN KEY ( deteccao_id ) REFERENCES deteccao ( id_deteccao );
+
+/* Tabela -> ong_deteccao */
+/* Chave estrangeira para relacionamento com a tabela deteccao */
+ALTER TABLE ong_deteccao ADD CONSTRAINT fk_ong_deteccao_deteccao FOREIGN KEY (deteccao_id) REFERENCES deteccao (id_deteccao);
+/* Chave estrangeira para relacionamento com a tabela ong */
+ALTER TABLE ong_deteccao ADD CONSTRAINT fk_ong_deteccao_ong FOREIGN KEY (ong_id) REFERENCES ong (id_ong);
+
 /*Tabela -> especie*/
 -- Chave estrangeira para relacionamento com a tabela categoria
 ALTER TABLE especie ADD CONSTRAINT fk_especie_categoria FOREIGN KEY ( categoria_id ) REFERENCES categoria ( id_categoria );
@@ -142,6 +152,7 @@ DROP PROCEDURE carregar_situacao;
 DROP PROCEDURE carregar_especie;
 DROP PROCEDURE carregar_deteccao;
 DROP PROCEDURE carregar_ong;
+DROP PROCEDURE carregar_ong_deteccao;
 
 /* USUARIO */
 -- Procedure para inserir/carregar dados na tabela usuario
@@ -349,13 +360,13 @@ END carregar_deteccao;
 -- Procedure para inserir/carregar dados na tabela ong
 CREATE OR REPLACE PROCEDURE carregar_ong (
     p_id_ong IN NUMBER,p_cnpj IN VARCHAR2,p_nome IN VARCHAR2,
-    p_email IN VARCHAR2,p_telefone IN VARCHAR2, p_deteccao_id IN NUMBER)
+    p_email IN VARCHAR2,p_telefone IN VARCHAR2)
 AS 
     v_sqlcode NUMBER;
     v_sqlerrm VARCHAR2(200); 
 BEGIN
-    INSERT INTO ong (id_ong, cnpj, nome, email, telefone, deteccao_id)
-    VALUES (p_id_ong, p_cnpj, p_nome, p_email, p_telefone, p_deteccao_id);  
+    INSERT INTO ong (id_ong, cnpj, nome, email, telefone)
+    VALUES (p_id_ong, p_cnpj, p_nome, p_email, p_telefone);  
     COMMIT;
     DBMS_OUTPUT.PUT_LINE('ONG: ' || p_nome || ' inserida com sucesso.');
 EXCEPTION
@@ -378,6 +389,40 @@ EXCEPTION
         VALUES (USER, 'carregar_ong', SYSDATE, v_sqlerrm, v_sqlcode);
         DBMS_OUTPUT.PUT_LINE('Erro ao inserir ONG: O erro foi inserido na tabela de registro_log.');
 END carregar_ong;
+
+/* ONG_DETECCAO */
+-- Procedure para inserir/carregar dados na tabela ong_deteccao
+CREATE OR REPLACE PROCEDURE carregar_ong_deteccao (
+    p_deteccao_id IN NUMBER,
+    p_ong_id IN NUMBER)
+AS 
+    v_sqlcode NUMBER;
+    v_sqlerrm VARCHAR2(200); 
+BEGIN
+    INSERT INTO ong_deteccao (deteccao_id, ong_id)
+    VALUES (p_deteccao_id, p_ong_id);  
+    COMMIT;
+    DBMS_OUTPUT.PUT_LINE('Relação ONG-Detecção inserida com sucesso.');
+EXCEPTION
+    WHEN DUP_VAL_ON_INDEX THEN
+        v_sqlcode := SQLCODE;
+        v_sqlerrm := SUBSTR(SQLERRM, 1, 200); 
+        INSERT INTO registro_log (username, nome_procedure, error_date, error_message, error_code)
+        VALUES (USER, 'carregar_ong_deteccao', SYSDATE, v_sqlerrm, v_sqlcode);
+        DBMS_OUTPUT.PUT_LINE('Erro ao inserir relação ONG-Detecção: Já existe uma relação com este ID. Para mais detalhes consulte a tabela registro_log.');
+    WHEN VALUE_ERROR THEN
+        v_sqlcode := SQLCODE;
+        v_sqlerrm := SUBSTR(SQLERRM, 1, 200); 
+        INSERT INTO registro_log (username, nome_procedure, error_date, error_message, error_code)
+        VALUES (USER, 'carregar_ong_deteccao', SYSDATE,  v_sqlerrm, v_sqlcode);
+        DBMS_OUTPUT.PUT_LINE('Erro ao inserir relação ONG-Detecção: Verifique se os tipos de dados estão corretos. Para mais detalhes consulte a tabela registro_log.');
+    WHEN OTHERS THEN
+        v_sqlcode := SQLCODE;
+        v_sqlerrm := SUBSTR(SQLERRM, 1, 200); 
+        INSERT INTO registro_log (username, nome_procedure, error_date, error_message, error_code)
+        VALUES (USER, 'carregar_ong_deteccao', SYSDATE, v_sqlerrm, v_sqlcode);
+        DBMS_OUTPUT.PUT_LINE('Erro ao inserir relação ONG-Detecção: O erro foi inserido na tabela de registro_log.');
+END carregar_ong_deteccao;
 
 -- INSERIR através de parametros nos procedimentos
 /* INSERINDO EM USUARIO */
@@ -443,12 +488,23 @@ END;
 
 /* INSERINDO EM ONG */
 BEGIN
-    carregar_ong(11, '12345678000100', 'ONG Oceano Azul', 'contato@oceanoazul.org', '11112222', 61);
-    carregar_ong(12, '22345678000100', 'ONG Mar Limpo', 'contato@marlimpo.org', '22223333', 62);
-    carregar_ong(13, '32345678000100', 'ONG Vida Marinha', 'contato@vidamarinha.org', '33334444', 63);
-    carregar_ong(14, '42345678000100', 'ONG Guardiões do Mar', 'contato@guardioesdomar.org', '44445555', 64);
-    carregar_ong(15, '52345678000100', 'ONG Protetores do Oceano', 'contato@protetoresdooceano.org', '55556666', 65);
-    carregar_ong(16, '12456987000100', 'ONG Preservando a vida Maritima', 'contato@vidamaritima.org', '55556666', 66);
+    carregar_ong(11, '12345678000100', 'ONG Oceano Azul', 'contato@oceanoazul.org', '11112222');
+    carregar_ong(12, '22345678000100', 'ONG Mar Limpo', 'contato@marlimpo.org', '22223333');
+    carregar_ong(13, '32345678000100', 'ONG Vida Marinha', 'contato@vidamarinha.org', '33334444');
+    carregar_ong(14, '42345678000100', 'ONG Guardiões do Mar', 'contato@guardioesdomar.org', '44445555');
+    carregar_ong(15, '52345678000100', 'ONG Protetores do Oceano', 'contato@protetoresdooceano.org', '55556666');
+    carregar_ong(16, '12456987000100', 'ONG Preservando a vida Maritima', 'contato@vidamaritima.org', '55556666');
+    COMMIT;
+END;
+
+/* INSERINDO EM ONG_DETECCAO */
+BEGIN
+    carregar_ong_deteccao(61, 11);
+    carregar_ong_deteccao(62, 12);
+    carregar_ong_deteccao(63, 13);
+    carregar_ong_deteccao(64, 14);
+    carregar_ong_deteccao(65, 15);
+    carregar_ong_deteccao(66, 16);
     COMMIT;
 END;
 
