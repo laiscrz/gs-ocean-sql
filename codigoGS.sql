@@ -105,14 +105,17 @@ CREATE TABLE deteccao (
 /* ALTERS TABLES */
 /*ADD Chaves Extrangeiras - relacionamentos*/
 
+/*Tabela -> deteccao*/
 -- Chave estrangeira para relacionamento com a tabela especie
 ALTER TABLE deteccao ADD CONSTRAINT fk_deteccao_especie FOREIGN KEY ( especie_id )REFERENCES especie ( id_especie );
 -- Chave estrangeira para relacionamento com a tabela localizacao
 ALTER TABLE deteccao ADD CONSTRAINT fk_deteccao_localizacao FOREIGN KEY ( localizacao_id ) REFERENCES localizacao ( id_localizacao );
--- Chave estrangeira para relacionamento com a tabela deteccao
-ALTER TABLE ong ADD CONSTRAINT fk_ong_deteccao FOREIGN KEY ( deteccao_id ) REFERENCES deteccao ( id_deteccao );
 -- Chave estrangeira para relacionamento com a tabela usuario
 ALTER TABLE deteccao ADD CONSTRAINT fk_deteccao_usuario FOREIGN KEY ( usuario_id ) REFERENCES usuario ( id_usuario );
+/*Tabela -> ong*/
+-- Chave estrangeira para relacionamento com a tabela deteccao
+ALTER TABLE ong ADD CONSTRAINT fk_ong_deteccao FOREIGN KEY ( deteccao_id ) REFERENCES deteccao ( id_deteccao );
+/*Tabela -> especie*/
 -- Chave estrangeira para relacionamento com a tabela categoria
 ALTER TABLE especie ADD CONSTRAINT fk_especie_categoria FOREIGN KEY ( categoria_id ) REFERENCES categoria ( id_categoria );
 -- Chave estrangeira para relacionamento com a tabela situacao
