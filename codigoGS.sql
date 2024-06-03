@@ -440,7 +440,7 @@ BEGIN
     carregar_ong(13, '32345678000100', 'ONG Vida Marinha', 'contato@vidamarinha.org', '33334444', 63);
     carregar_ong(14, '42345678000100', 'ONG Guardiões do Mar', 'contato@guardioesdomar.org', '44445555', 64);
     carregar_ong(15, '52345678000100', 'ONG Protetores do Oceano', 'contato@protetoresdooceano.org', '55556666', 65);
-    carregar_ong(16, '12456987000100', 'ONG Preservando a vida Maritima', 'contato@vidamaritma.org', '55556666', 66);
+    carregar_ong(16, '12456987000100', 'ONG Preservando a vida Maritima', 'contato@vidamaritima.org', '55556666', 66);
     COMMIT;
 END;
 
