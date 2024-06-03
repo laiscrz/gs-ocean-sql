@@ -1,4 +1,3 @@
-
 /*
 Empresa LeadTech
 
@@ -417,8 +416,8 @@ END;
 /* INSERINDO EM ESPECIE */
 BEGIN
     carregar_especie(51, 'Tartaruga Verde', 'Chelonia mydas', 'Espécie de tartaruga marinha.', 41, 32);
-    carregar_especie(52, 'Baleia Jubarte', 'Megaptera novaeangliae', 'Grande mamífero marinho.', 42, 32);
-    carregar_especie(53, 'Polvo', 'Octopus vulgaris', 'Molusco marinho com oito tentáculos.', 43, 34);
+    carregar_especie(52, 'Baleia Jubarte', 'Megaptera novaeangliae', 'Grande mamífero marinho.', 43, 32);
+    carregar_especie(53, 'Polvo', 'Octopus vulgaris', 'Molusco marinho com oito tentáculos.', 42, 34);
     carregar_especie(54, 'Tubarão Branco', 'Carcharodon carcharias', 'Grande tubarão predador.', 44, 35);
     carregar_especie(55, 'Peixe-palhaço', 'Amphiprion ocellaris', 'Peixe popular em aquários.', 41, 31);
     carregar_especie(56, 'Água-viva Comum', 'Aurelia aurita', 'Espécie de água-viva.', 42, 33);
@@ -627,7 +626,7 @@ EXCEPTION
 END;
 
 /*
-BLOCO ANONIMO 4: 
+BLOCO ANONIMO 4: Relatório sumarização de especies com situação
 - Uso de Cursor Explicito
 - Tomada de Decisão
 - listando todos os dados
