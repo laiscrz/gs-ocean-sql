@@ -33,6 +33,9 @@ DROP TABLE situacao CASCADE CONSTRAINTS;
 /* Remove a tabela 'usuario' e quaisquer restrições que dependem dela */
 DROP TABLE usuario CASCADE CONSTRAINTS;
 
+/* Remove a tabela 'ong_deteccao' e quaisquer restrições que dependem dela */
+DROP TABLE ong_deteccao CASCADE CONSTRAINTS;
+
 /* CREATES TABLES */
 
 /* Tabela para armazenar informações dos usuários */
@@ -776,7 +779,7 @@ BEGIN
         DBMS_OUTPUT.PUT_LINE('|       ' || situacao_rec.situacao_id || '    |         ' || situacao_rec.situacao_count || '         |');
          -- Verifica se o número de espécies é maior ou igual a 2 e imprime uma mensagem
         IF situacao_rec.situacao_count >= 2 THEN
-            DBMS_OUTPUT.PUT_LINE('-> Mais de 2 espécies nesta situação.');
+            DBMS_OUTPUT.PUT_LINE('-> 2 ou mais espécies nesta situação.');
         END IF;
         -- Acumula o subtotal
         subtotal := subtotal + situacao_rec.situacao_count;
