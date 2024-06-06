@@ -712,7 +712,7 @@ EXCEPTION
 END;
 
 /*
-BLOCO ANONIMO 4: Relatório sumarização de especies com situação
+BLOCO ANONIMO 4: Relatório sumarizado de espécies por situação com IDs de espécies
 - Uso de Cursor Explicito
 - Tomada de Decisão
 - listando todos os dados
@@ -723,71 +723,68 @@ DECLARE
     -- Variáveis para sumarização numérica
     total_registros NUMBER := 0;
     total_situacoes NUMBER := 0;
-    
     subtotal NUMBER := 0;
 
-    -- Variáveis para sumarização agrupada
+    -- Variável para guardar os IDs de situações distintas
     situacao_count VARCHAR2(4000) := '';
-
-    -- Cursor para selecionar dados da tabela 'especie'
-    CURSOR c_especie IS
-        SELECT * FROM especie;
 
     -- Cursor para sumarização agrupada por situação
     CURSOR c_sumarizacao IS
-        SELECT situacao_id, COUNT(*) AS situacao_count
+        SELECT s.id_situacao, COUNT(e.id_especie) AS situacao_count
+        FROM situacao s
+        LEFT JOIN especie e ON s.id_situacao = e.situacao_id
+        GROUP BY s.id_situacao
+        ORDER BY s.id_situacao;
+
+    -- Cursor para recuperar IDs das espécies por situação
+    CURSOR c_especies_situacao (p_situacao_id NUMBER) IS
+        SELECT id_especie
         FROM especie
-        GROUP BY situacao_id;
+        WHERE situacao_id = p_situacao_id
+        ORDER BY id_especie; -- Opcional: ordem dos IDs de espécie
 
 BEGIN
     -- Imprimir relatório
-    DBMS_OUTPUT.PUT_LINE('RELATÓRIO ESPECIE SUMARIZADA COM BASE EM SITUAÇÃO:');
-    DBMS_OUTPUT.PUT_LINE('-----------------------------');
+    DBMS_OUTPUT.PUT_LINE('RELATÓRIO DE ESPÉCIES SUMARIZADO POR SITUAÇÃO COM IDS DE ESPÉCIES:');
+    DBMS_OUTPUT.PUT_LINE('---------------------------------------------------');
 
-    -- Título para listar os dados da tabela 'especie'
-    DBMS_OUTPUT.PUT_LINE('| ID |    Nome Comum    |   Nome Científico    |     Descrição      | Situação ID |');
-
-    -- Loop para percorrer os dados da tabela 'especie' usando o cursor
-    FOR especie_rec IN c_especie LOOP
-        -- Imprime os dados da espécie
-        DBMS_OUTPUT.PUT_LINE('| ' || especie_rec.id_especie || ' |  ' || especie_rec.nome_comum || ' | ' || especie_rec.nome_cientifico || ' | ' || especie_rec.descricao || ' | ' || especie_rec.situacao_id || ' |');
+    -- Abrir o cursor explícito para sumarização por situação
+    FOR situacao_rec IN c_sumarizacao LOOP
+        -- Imprime sumarização agrupada por situação
+        DBMS_OUTPUT.PUT_LINE('| Situação ID | Total de espécies |');
+        DBMS_OUTPUT.PUT_LINE('|       ' || situacao_rec.id_situacao || '    |         ' || situacao_rec.situacao_count || '         |');
 
         -- Incrementa o total de registros
-        total_registros := total_registros + 1;
+        total_registros := total_registros + situacao_rec.situacao_count;
 
         -- Verifica se o situacao_id já foi contado anteriormente
-        IF situacao_count = '' OR INSTR(',' || situacao_count || ',', ',' || especie_rec.situacao_id || ',') = 0 THEN
+        IF situacao_count = '' OR INSTR(',' || situacao_count || ',', ',' || situacao_rec.id_situacao || ',') = 0 THEN
             -- Incrementa o total de situações distintas
             total_situacoes := total_situacoes + 1;
             -- Adiciona o situacao_id à lista de ids distintos
-            situacao_count := situacao_count || ',' || especie_rec.situacao_id;
+            situacao_count := situacao_count || ',' || situacao_rec.id_situacao;
         END IF;
 
-        -- Incrementa o contador de espécies por situação
-        situacao_count := situacao_count || ',' || especie_rec.situacao_id;
-    END LOOP;
-
-    -- Imprime sumarizações agrupadas por situação
-    DBMS_OUTPUT.PUT_LINE('-----------------------------');
-    DBMS_OUTPUT.PUT_LINE('SUMARIZAÇÕES DAS ESPECIES AGRUPADAS POR SITUAÇÕES');
-    DBMS_OUTPUT.PUT_LINE('-----------------------------');
-    DBMS_OUTPUT.PUT_LINE('| Situação ID | Total de espécies |');
-
-    -- Loop para sumarização agrupada por situação usando o cursor
-    FOR situacao_rec IN c_sumarizacao LOOP
-        -- Imprime sumarização agrupada por situação
-        DBMS_OUTPUT.PUT_LINE('|       ' || situacao_rec.situacao_id || '    |         ' || situacao_rec.situacao_count || '         |');
-         -- Verifica se o número de espécies é maior ou igual a 2 e imprime uma mensagem
+        -- Cursor para recuperar IDs das espécies para a situação atual
+        FOR especie_id_rec IN c_especies_situacao(situacao_rec.id_situacao) LOOP
+            -- Imprime cada ID de espécie em uma linha separada
+            DBMS_OUTPUT.PUT_LINE('   - ID da Espécie: ' || especie_id_rec.id_especie);
+    
+        END LOOP;
+        -- Verifica se o número de espécies é maior ou igual a 2 e imprime uma mensagem
         IF situacao_rec.situacao_count >= 2 THEN
             DBMS_OUTPUT.PUT_LINE('-> 2 ou mais espécies nesta situação.');
         END IF;
+        
         -- Acumula o subtotal
         subtotal := subtotal + situacao_rec.situacao_count;
         
         -- Imprime o subtotal
         DBMS_OUTPUT.PUT_LINE('-> subtotal: ' || subtotal);
+        -- Quebra de linha 
+        DBMS_OUTPUT.PUT_LINE('');
     END LOOP;
-    
+
     -- Imprime sumarizações numéricas
     DBMS_OUTPUT.PUT_LINE('-----------------------------');
     DBMS_OUTPUT.PUT_LINE('--- SUMARIZAÇÕES NUMÉRICAS - Resultados ---');
