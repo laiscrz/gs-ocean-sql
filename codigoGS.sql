@@ -163,7 +163,7 @@ CREATE OR REPLACE PROCEDURE carregar_usuario (
     p_id_usuario IN NUMBER,p_nome IN VARCHAR2, p_genero IN CHAR,p_email IN VARCHAR2,p_senha IN VARCHAR2)
 AS 
     v_sqlcode NUMBER;
-    v_sqlerrm VARCHAR2(200); -- Ajustando para limitar a mensagem a 200 caracteres
+    v_sqlerrm VARCHAR2(200); 
 BEGIN
     INSERT INTO usuario (id_usuario, nome, genero, email, senha)
     VALUES (p_id_usuario, p_nome, p_genero, p_email, p_senha);  
@@ -533,31 +533,23 @@ DECLARE
     v_especie_detectada especie.nome_comum%TYPE;
     
 BEGIN
-    -- Imprimir relatório
     DBMS_OUTPUT.PUT_LINE('RELATÓRIO DETEÇÕES MAIS RECENTES(DATA):');
     DBMS_OUTPUT.PUT_LINE('-----------------------------');
     -- Abrindo o cursor
     OPEN c_deteccoes;
     
-    -- Loop para iterar sobre as detecções
     LOOP
-        -- Buscando os dados de cada detecção
         FETCH c_deteccoes INTO v_id_deteccao, v_url_imagem, v_data_deteccao, v_nome_usuario, v_especie_detectada;
-        
-        -- Saindo do loop quando não houver mais dados
+
         EXIT WHEN c_deteccoes%NOTFOUND;
         
         -- Tomada de decisão baseada na data da detecção
         IF v_data_deteccao > TO_DATE('2023-06-15', 'YYYY-MM-DD') THEN
-            -- Exibindo informações das detecções feitas após 1 de janeiro de 2023
             DBMS_OUTPUT.PUT_LINE('ID da Detecção: ' || v_id_deteccao || ', URL da Imagem: ' || v_url_imagem || ', Data da Detecção: ' || v_data_deteccao || ', Nome do Usuário: ' || v_nome_usuario || ', Espécie Detectada: ' || v_especie_detectada);
         ELSE
-            -- Exibindo informações das detecções feitas antes ou em 1 de janeiro de 2023
             DBMS_OUTPUT.PUT_LINE('Detecção anterior a 2023-06: ' || v_id_deteccao);
         END IF;
     END LOOP;
-    
-    -- Fechando o cursor
     CLOSE c_deteccoes;
     
 EXCEPTION
@@ -578,14 +570,18 @@ BLOCO ANONIMO 2: Determinar o gênero com mais detecções usando cursor
 DECLARE
     -- Declaração de cursores explícitos para os usuários masculinos e femininos
     CURSOR cur_masculinos IS
-        SELECT nome, genero
-        FROM usuario
-        WHERE TRIM(genero) = 'M';
+        SELECT u.nome, u.genero, COUNT(d.id_deteccao) AS qtd_deteccoes
+        FROM usuario u
+        LEFT JOIN deteccao d ON u.id_usuario = d.usuario_id
+        WHERE TRIM(u.genero) = 'M'
+        GROUP BY u.nome, u.genero;
 
     CURSOR cur_femininos IS
-        SELECT nome, genero
-        FROM usuario
-        WHERE TRIM(genero) = 'F';
+        SELECT u.nome, u.genero, COUNT(d.id_deteccao) AS qtd_deteccoes
+        FROM usuario u
+        LEFT JOIN deteccao d ON u.id_usuario = d.usuario_id
+        WHERE TRIM(u.genero) = 'F'
+        GROUP BY u.nome, u.genero;
 
     -- Variáveis para armazenar a quantidade de usuários masculinos e femininos
     v_qtd_masculinos INTEGER := 0;
@@ -594,62 +590,38 @@ DECLARE
     -- Variáveis para armazenar os resultados dos cursores
     v_nome_usuario usuario.nome%TYPE;
     v_genero_usuario usuario.genero%TYPE;
+    v_qtd_deteccoes INTEGER;
 
 BEGIN
-    -- Imprimir relatório
-    DBMS_OUTPUT.PUT_LINE('RELATÓRIO USUÁRIO POR GÊNERO:');
-    DBMS_OUTPUT.PUT_LINE('-----------------------------');
+    DBMS_OUTPUT.PUT_LINE('RELATÓRIO USUÁRIO POR GÊNERO COM DETECÇÕES:');
+    DBMS_OUTPUT.PUT_LINE('---------------------------------------------');
 
-    -- Abrir o cursor de usuários masculinos
     OPEN cur_masculinos;
-    -- Obtendo a quantidade de usuários masculinos
     LOOP
-        FETCH cur_masculinos INTO v_nome_usuario, v_genero_usuario;
+        FETCH cur_masculinos INTO v_nome_usuario, v_genero_usuario, v_qtd_deteccoes;
         EXIT WHEN cur_masculinos%NOTFOUND;
         v_qtd_masculinos := v_qtd_masculinos + 1;
+        DBMS_OUTPUT.PUT_LINE('Nome: ' || v_nome_usuario || ', Gênero: ' || v_genero_usuario || ', Quantidade de detecções: ' || v_qtd_deteccoes);
     END LOOP;
-    -- Fechar o cursor de usuários masculinos
     CLOSE cur_masculinos;
 
-    -- Abrir o cursor de usuários femininos
     OPEN cur_femininos;
-    -- Obtendo a quantidade de usuários femininos
     LOOP
-        FETCH cur_femininos INTO v_nome_usuario, v_genero_usuario;
+        FETCH cur_femininos INTO v_nome_usuario, v_genero_usuario, v_qtd_deteccoes;
         EXIT WHEN cur_femininos%NOTFOUND;
         v_qtd_femininos := v_qtd_femininos + 1;
+        DBMS_OUTPUT.PUT_LINE('Nome: ' || v_nome_usuario || ', Gênero: ' || v_genero_usuario || ', Quantidade de detecções: ' || v_qtd_deteccoes);
     END LOOP;
-    -- Fechar o cursor de usuários femininos
     CLOSE cur_femininos;
 
     -- Verificando qual gênero tem mais usuários
     IF v_qtd_masculinos > v_qtd_femininos THEN
-        -- Se o gênero masculino tem mais usuários, imprimir os nomes e gêneros dos usuários masculinos
+        -- Se o gênero masculino tem mais usuários, imprimir a quantidade de usuários femininos
         DBMS_OUTPUT.PUT_LINE('Gênero predominante: Masculino');
-        -- Reabrir o cursor de usuários masculinos
-        OPEN cur_masculinos;
-        LOOP
-            FETCH cur_masculinos INTO v_nome_usuario, v_genero_usuario;
-            EXIT WHEN cur_masculinos%NOTFOUND;
-            DBMS_OUTPUT.PUT_LINE('Nome: ' || v_nome_usuario || ', Gênero: ' || v_genero_usuario);
-        END LOOP;
-        -- Fechar o cursor de usuários masculinos
-        CLOSE cur_masculinos;
-        -- Imprimir a quantidade de usuários femininos
         DBMS_OUTPUT.PUT_LINE('Quantidade de usuárias femininas: ' || v_qtd_femininos);
     ELSIF v_qtd_femininos > v_qtd_masculinos THEN
-        -- Se o gênero feminino tem mais usuários, imprimir os nomes e gêneros dos usuários femininos
+        -- Se o gênero feminino tem mais usuários, imprimir a quantidade de usuários masculinos
         DBMS_OUTPUT.PUT_LINE('Gênero predominante: Feminino');
-        -- Reabrir o cursor de usuários femininos
-        OPEN cur_femininos;
-        LOOP
-            FETCH cur_femininos INTO v_nome_usuario, v_genero_usuario;
-            EXIT WHEN cur_femininos%NOTFOUND;
-            DBMS_OUTPUT.PUT_LINE('Nome: ' || v_nome_usuario || ', Gênero: ' || v_genero_usuario);
-        END LOOP;
-        -- Fechar o cursor de usuários femininos
-        CLOSE cur_femininos;
-        -- Imprimir a quantidade de usuários masculinos
         DBMS_OUTPUT.PUT_LINE('Quantidade de usuários masculinos: ' || v_qtd_masculinos);
     ELSE
         -- Se houver o mesmo número de usuários masculinos e femininos, imprimir a quantidade
@@ -681,18 +653,13 @@ BEGIN
      -- Imprimir relatório
     DBMS_OUTPUT.PUT_LINE('RELATÓRIO ESPECIES EM RISCO:');
     DBMS_OUTPUT.PUT_LINE('-----------------------------');
-    -- Abrir o cursor
     OPEN c_especies_em_risco;
 
-    -- Iterar sobre as espécies
     LOOP
-        -- Buscar próximo registro
         FETCH c_especies_em_risco INTO v_nome_especie, v_em_risco_extincao;
         
-        -- Sair do loop quando não houver mais registros
         EXIT WHEN c_especies_em_risco%NOTFOUND;
 
-        -- Tomada de decisão
         IF v_em_risco_extincao = 'S' THEN
             DBMS_OUTPUT.PUT_LINE('Espécie ' || v_nome_especie || ' está em risco de extinção.');
         ELSE
@@ -700,7 +667,6 @@ BEGIN
         END IF;
     END LOOP;
 
-    -- Fechar o cursor
     CLOSE c_especies_em_risco;
 EXCEPTION
     WHEN NO_DATA_FOUND THEN
@@ -741,16 +707,14 @@ DECLARE
         SELECT id_especie
         FROM especie
         WHERE situacao_id = p_situacao_id
-        ORDER BY id_especie; -- Opcional: ordem dos IDs de espécie
+        ORDER BY id_especie; 
 
 BEGIN
     -- Imprimir relatório
     DBMS_OUTPUT.PUT_LINE('RELATÓRIO DE ESPÉCIES SUMARIZADO POR SITUAÇÃO COM IDS DE ESPÉCIES:');
     DBMS_OUTPUT.PUT_LINE('---------------------------------------------------');
 
-    -- Abrir o cursor explícito para sumarização por situação
     FOR situacao_rec IN c_sumarizacao LOOP
-        -- Imprime sumarização agrupada por situação
         DBMS_OUTPUT.PUT_LINE('| Situação ID | Total de espécies |');
         DBMS_OUTPUT.PUT_LINE('|       ' || situacao_rec.id_situacao || '    |         ' || situacao_rec.situacao_count || '         |');
 
@@ -767,9 +731,7 @@ BEGIN
 
         -- Cursor para recuperar IDs das espécies para a situação atual
         FOR especie_id_rec IN c_especies_situacao(situacao_rec.id_situacao) LOOP
-            -- Imprime cada ID de espécie em uma linha separada
             DBMS_OUTPUT.PUT_LINE('   - ID da Espécie: ' || especie_id_rec.id_especie);
-    
         END LOOP;
         -- Verifica se o número de espécies é maior ou igual a 2 e imprime uma mensagem
         IF situacao_rec.situacao_count >= 2 THEN
