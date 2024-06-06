@@ -597,6 +597,9 @@ BEGIN
     DBMS_OUTPUT.PUT_LINE('---------------------------------------------');
 
     OPEN cur_masculinos;
+     DBMS_OUTPUT.PUT_LINE('USUÁRIOS DO GÊNERO MASCULINO:');
+        -- Quebra de linha 
+        DBMS_OUTPUT.PUT_LINE('');
     LOOP
         FETCH cur_masculinos INTO v_nome_usuario, v_genero_usuario, v_qtd_deteccoes;
         EXIT WHEN cur_masculinos%NOTFOUND;
@@ -606,6 +609,9 @@ BEGIN
     CLOSE cur_masculinos;
     DBMS_OUTPUT.PUT_LINE('---------------------------------------------');
     OPEN cur_femininos;
+    DBMS_OUTPUT.PUT_LINE('USUÁRIOS DO GÊNERO FEMININO:');
+        -- Quebra de linha 
+        DBMS_OUTPUT.PUT_LINE('');
     LOOP
         FETCH cur_femininos INTO v_nome_usuario, v_genero_usuario, v_qtd_deteccoes;
         EXIT WHEN cur_femininos%NOTFOUND;
@@ -663,7 +669,7 @@ BEGIN
         IF v_em_risco_extincao = 'S' THEN
             DBMS_OUTPUT.PUT_LINE('Espécie ' || v_nome_especie || ' está em risco de extinção.');
         ELSE
-            DBMS_OUTPUT.PUT_LINE('Espécie ' || v_nome_especie || ' não está em risco de extinção.');
+            DBMS_OUTPUT.PUT_LINE('Espécie ' || v_nome_especie || ' NÃO está em risco de extinção.');
         END IF;
     END LOOP;
 
