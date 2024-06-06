@@ -139,7 +139,7 @@ CREATE TABLE registro_log (
     nome_procedure VARCHAR2(100),              -- Nome da Procedure
     username VARCHAR2(50),                     -- Nome do Usuario do banco
     error_date DATE,                            -- Data do erro
-    error_code VARCHAR2(10),                    -- Código de erro
+    error_code VARCHAR2(20),                    -- Código de erro
     error_message VARCHAR2(200)               -- Mensagem de erro
 );
 
