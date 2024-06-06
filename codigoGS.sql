@@ -590,7 +590,7 @@ DECLARE
     -- Variáveis para armazenar os resultados dos cursores
     v_nome_usuario usuario.nome%TYPE;
     v_genero_usuario usuario.genero%TYPE;
-    v_qtd_deteccoes INTEGER;
+    v_qtd_deteccoes NUMBER;
 
 BEGIN
     DBMS_OUTPUT.PUT_LINE('RELATÓRIO USUÁRIO POR GÊNERO COM DETECÇÕES:');
@@ -604,7 +604,7 @@ BEGIN
         DBMS_OUTPUT.PUT_LINE('Nome: ' || v_nome_usuario || ', Gênero: ' || v_genero_usuario || ', Quantidade de detecções: ' || v_qtd_deteccoes);
     END LOOP;
     CLOSE cur_masculinos;
-
+    DBMS_OUTPUT.PUT_LINE('---------------------------------------------');
     OPEN cur_femininos;
     LOOP
         FETCH cur_femininos INTO v_nome_usuario, v_genero_usuario, v_qtd_deteccoes;
@@ -613,16 +613,16 @@ BEGIN
         DBMS_OUTPUT.PUT_LINE('Nome: ' || v_nome_usuario || ', Gênero: ' || v_genero_usuario || ', Quantidade de detecções: ' || v_qtd_deteccoes);
     END LOOP;
     CLOSE cur_femininos;
-
+    DBMS_OUTPUT.PUT_LINE('---------------------------------------------');
     -- Verificando qual gênero tem mais usuários
     IF v_qtd_masculinos > v_qtd_femininos THEN
         -- Se o gênero masculino tem mais usuários, imprimir a quantidade de usuários femininos
         DBMS_OUTPUT.PUT_LINE('Gênero predominante: Masculino');
-        DBMS_OUTPUT.PUT_LINE('Quantidade de usuárias femininas: ' || v_qtd_femininos);
+        DBMS_OUTPUT.PUT_LINE('Quantidade de usuárias femininas (não predominante): ' || v_qtd_femininos);
     ELSIF v_qtd_femininos > v_qtd_masculinos THEN
         -- Se o gênero feminino tem mais usuários, imprimir a quantidade de usuários masculinos
         DBMS_OUTPUT.PUT_LINE('Gênero predominante: Feminino');
-        DBMS_OUTPUT.PUT_LINE('Quantidade de usuários masculinos: ' || v_qtd_masculinos);
+        DBMS_OUTPUT.PUT_LINE('Quantidade de usuários masculinos (não predominante): ' || v_qtd_masculinos);
     ELSE
         -- Se houver o mesmo número de usuários masculinos e femininos, imprimir a quantidade
         DBMS_OUTPUT.PUT_LINE('Há o mesmo número de usuários para ambos os gêneros, com um total de ' || v_qtd_masculinos || ' usuários masculinos e ' || v_qtd_femininos || ' usuárias femininas.');
@@ -692,7 +692,7 @@ DECLARE
     subtotal NUMBER := 0;
 
     -- Variável para guardar os IDs de situações distintas
-    situacao_count VARCHAR2(4000) := '';
+    situacao_count VARCHAR2(100) := '';
 
     -- Cursor para sumarização agrupada por situação
     CURSOR c_sumarizacao IS
@@ -728,11 +728,12 @@ BEGIN
             -- Adiciona o situacao_id à lista de ids distintos
             situacao_count := situacao_count || ',' || situacao_rec.id_situacao;
         END IF;
-
+        DBMS_OUTPUT.PUT_LINE('-----------------------------------');
         -- Cursor para recuperar IDs das espécies para a situação atual
         FOR especie_id_rec IN c_especies_situacao(situacao_rec.id_situacao) LOOP
             DBMS_OUTPUT.PUT_LINE('   - ID da Espécie: ' || especie_id_rec.id_especie);
         END LOOP;
+        DBMS_OUTPUT.PUT_LINE('-----------------------------------');
         -- Verifica se o número de espécies é maior ou igual a 2 e imprime uma mensagem
         IF situacao_rec.situacao_count >= 2 THEN
             DBMS_OUTPUT.PUT_LINE('-> 2 ou mais espécies nesta situação.');
