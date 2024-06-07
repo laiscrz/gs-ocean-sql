@@ -32,7 +32,7 @@ Foram criados blocos anônimos para gerar relatórios essenciais para a gestão 
 
 3. **Relatório de Espécies em Risco de Extinção**: Utiliza um cursor explícito para identificar e listar espécies que estão em risco de extinção.
 
-4. **Relatório Sumarizado de Espécies por Situação com IDs de Espécies**: Utiliza cursores para agrupar espécies por situação e apresentar IDs de espécies correspondentes.
+4. **Relatório Sumarizado de Espécies por Situação com IDs de Espécies**: Utiliza cursores explícitos para agrupar espécies por situação e apresentar IDs de espécies correspondentes.
 
 > Essas funcionalidades são fundamentais para a administração e análise de dados do projeto "Oceano Vivo", proporcionando uma base sólida para a conservação e gestão sustentável dos recursos marinhos.
 
