@@ -125,6 +125,8 @@ ALTER TABLE deteccao ADD CONSTRAINT fk_deteccao_usuario FOREIGN KEY ( usuario_id
 ALTER TABLE ong_deteccao ADD CONSTRAINT fk_ong_deteccao_deteccao FOREIGN KEY (deteccao_id) REFERENCES deteccao (id_deteccao);
 /* Chave estrangeira para relacionamento com a tabela ong */
 ALTER TABLE ong_deteccao ADD CONSTRAINT fk_ong_deteccao_ong FOREIGN KEY (ong_id) REFERENCES ong (id_ong);
+/* Adicionando uma restrição de primary key na tabela ong_deteccao -> para evitar q as fks sejam duplicadas*/
+ALTER TABLE ong_deteccao ADD CONSTRAINT ong_deteccao_PKS PRIMARY KEY (deteccao_id, ong_id);
 
 /*Tabela -> especie*/
 -- Chave estrangeira para relacionamento com a tabela categoria
@@ -741,16 +743,13 @@ BEGIN
         IF situacao_rec.situacao_count >= 2 THEN
             DBMS_OUTPUT.PUT_LINE('-> 2 ou mais espécies nesta situação.');
         END IF;
-        
         -- Acumula o subtotal
         subtotal := subtotal + situacao_rec.situacao_count;
-        
         -- Imprime o subtotal
         DBMS_OUTPUT.PUT_LINE('-> subtotal: ' || subtotal);
         -- Quebra de linha 
         DBMS_OUTPUT.PUT_LINE('');
     END LOOP;
-
     -- Imprime sumarizações numéricas
     DBMS_OUTPUT.PUT_LINE('-----------------------------');
     DBMS_OUTPUT.PUT_LINE('--- SUMARIZAÇÕES NUMÉRICAS - Resultados ---');
