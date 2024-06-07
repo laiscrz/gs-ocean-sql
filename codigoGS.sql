@@ -698,7 +698,7 @@ DECLARE
     subtotal NUMBER := 0;
     -- Variável para guardar os IDs de situações distintas
     situacao_count VARCHAR2(100) := '';
-    
+
     -- Cursor para sumarização agrupada por situação
     CURSOR c_sumarizacao IS
         SELECT s.id_situacao, COUNT(e.id_especie) AS situacao_count
@@ -713,6 +713,8 @@ DECLARE
         FROM especie
         WHERE situacao_id = p_situacao_id
         ORDER BY id_especie; 
+
+    especie_id_rec c_especies_situacao%ROWTYPE; -- Variável para receber os dados do cursor
 
 BEGIN
     -- Imprimir relatório
@@ -734,10 +736,16 @@ BEGIN
             situacao_count := situacao_count || ',' || situacao_rec.id_situacao;
         END IF;
         DBMS_OUTPUT.PUT_LINE('-----------------------------------');
-        -- Cursor para recuperar IDs das espécies para a situação atual
-        FOR especie_id_rec IN c_especies_situacao(situacao_rec.id_situacao) LOOP
+
+        OPEN c_especies_situacao(situacao_rec.id_situacao);
+        LOOP
+            FETCH c_especies_situacao INTO especie_id_rec;
+            EXIT WHEN c_especies_situacao%NOTFOUND;
             DBMS_OUTPUT.PUT_LINE('   - ID da Espécie: ' || especie_id_rec.id_especie);
         END LOOP;
+
+        CLOSE c_especies_situacao;
+
         DBMS_OUTPUT.PUT_LINE('-----------------------------------');
         -- Verifica se o número de espécies é maior ou igual a 2 e imprime uma mensagem
         IF situacao_rec.situacao_count >= 2 THEN
