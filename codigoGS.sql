@@ -715,13 +715,21 @@ DECLARE
         ORDER BY id_especie; 
 
     especie_id_rec c_especies_situacao%ROWTYPE; -- Variável para receber os dados do cursor
+    situacao_rec c_sumarizacao%ROWTYPE; -- Variável para receber os dados do cursor c_sumarizacao
 
 BEGIN
     -- Imprimir relatório
     DBMS_OUTPUT.PUT_LINE('RELATÓRIO DE ESPÉCIES SUMARIZADO POR SITUAÇÃO COM IDS DE ESPÉCIES:');
     DBMS_OUTPUT.PUT_LINE('---------------------------------------------------');
 
-    FOR situacao_rec IN c_sumarizacao LOOP
+    -- Abertura explícita do cursor c_sumarizacao
+    OPEN c_sumarizacao;
+
+    -- Loop principal usando o cursor c_sumarizacao
+    LOOP
+        FETCH c_sumarizacao INTO situacao_rec;
+        EXIT WHEN c_sumarizacao%NOTFOUND;
+
         DBMS_OUTPUT.PUT_LINE('| Situação ID | Total de espécies |');
         DBMS_OUTPUT.PUT_LINE('|       ' || situacao_rec.id_situacao || '    |         ' || situacao_rec.situacao_count || '         |');
 
@@ -737,6 +745,7 @@ BEGIN
         END IF;
         DBMS_OUTPUT.PUT_LINE('-----------------------------------');
 
+        -- Abre o cursor explícito c_especies_situacao para a situação atual
         OPEN c_especies_situacao(situacao_rec.id_situacao);
         LOOP
             FETCH c_especies_situacao INTO especie_id_rec;
@@ -744,6 +753,7 @@ BEGIN
             DBMS_OUTPUT.PUT_LINE('   - ID da Espécie: ' || especie_id_rec.id_especie);
         END LOOP;
 
+        -- Fecha o cursor explícito c_especies_situacao após o uso
         CLOSE c_especies_situacao;
 
         DBMS_OUTPUT.PUT_LINE('-----------------------------------');
@@ -758,6 +768,10 @@ BEGIN
         -- Quebra de linha 
         DBMS_OUTPUT.PUT_LINE('');
     END LOOP;
+
+    -- Fechamento explícito do cursor c_sumarizacao
+    CLOSE c_sumarizacao;
+
     -- Imprime sumarizações numéricas
     DBMS_OUTPUT.PUT_LINE('-----------------------------');
     DBMS_OUTPUT.PUT_LINE('--- SUMARIZAÇÕES NUMÉRICAS - Resultados ---');
@@ -772,3 +786,4 @@ EXCEPTION
     WHEN OTHERS THEN
         DBMS_OUTPUT.PUT_LINE('Erro ao processar os dados: ' || SQLERRM);
 END;
+
