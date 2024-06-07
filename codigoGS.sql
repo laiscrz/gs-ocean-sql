@@ -144,9 +144,6 @@ CREATE TABLE registro_log (
 );
 
 -- CARGA DE DADOS -> Criação e Procedures 
-SET SERVEROUTPUT ON;
-SET VERIFY OFF;
-
 /*DROPS PROCEDURES DE CARGA DE DADOS*/
 DROP PROCEDURE carregar_usuario;
 DROP PROCEDURE carregar_localizacao;
@@ -428,6 +425,9 @@ EXCEPTION
 END carregar_ong_deteccao;
 
 -- INSERIR através de parametros nos procedimentos
+SET SERVEROUTPUT ON;
+SET VERIFY OFF;
+
 /* INSERINDO EM USUARIO */
 BEGIN
     carregar_usuario(1, 'Alice dos Santos', 'F', 'alice@example.com', 'alice23');
@@ -535,9 +535,7 @@ DECLARE
 BEGIN
     DBMS_OUTPUT.PUT_LINE('RELATÓRIO DETEÇÕES MAIS RECENTES(DATA):');
     DBMS_OUTPUT.PUT_LINE('-----------------------------');
-    -- Abrindo o cursor
-    OPEN c_deteccoes;
-    
+    OPEN c_deteccoes; 
     LOOP
         FETCH c_deteccoes INTO v_id_deteccao, v_url_imagem, v_data_deteccao, v_nome_usuario, v_especie_detectada;
 
@@ -696,10 +694,9 @@ DECLARE
     total_registros NUMBER := 0;
     total_situacoes NUMBER := 0;
     subtotal NUMBER := 0;
-
     -- Variável para guardar os IDs de situações distintas
     situacao_count VARCHAR2(100) := '';
-
+    
     -- Cursor para sumarização agrupada por situação
     CURSOR c_sumarizacao IS
         SELECT s.id_situacao, COUNT(e.id_especie) AS situacao_count
