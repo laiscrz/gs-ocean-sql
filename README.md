@@ -6,6 +6,36 @@
 
 O projeto "OceanoVivo" visa desenvolver uma solução tecnológica para a identificação automática de espécies marinhas usando inteligência artificial, facilitando o monitoramento e conservação dos ecossistemas oceânicos. Através desta ferramenta, buscamos enfrentar desafios como a pesca excessiva, poluição e mudanças climáticas, que ameaçam a biodiversidade marinha e comprometem a saúde dos ecossistemas oceânicos. A solução inovadora do "OceanoVivo" oferece uma abordagem mais eficiente e precisa para identificar e monitorar espécies marinhas, promovendo a conservação e gestão sustentável dos recursos marinhos.
 
+## 🚀 Funcionalidades
+
+### 📊 Modelagem de Dados
+
+O projeto utiliza o **Oracle Data Modeler** para criar e gerenciar modelos de dados. Esta ferramenta proporciona uma visualização clara da estrutura do banco de dados, facilitando o desenvolvimento e manutenção do esquema.
+
+### 🗄️ Banco de Dados
+
+O banco de dados foi implementado utilizando **Oracle SQL**, um sistema de gerenciamento de banco de dados relacional (RDBMS) robusto. Abaixo estão algumas das funcionalidades implementadas:
+
+- **Tabela de Registro de Log (registro_log)**: Criada para registrar erros ocorridos durante operações de carga de dados. Essa tabela permite rastrear e analisar eventos não esperados.
+
+### 🔧 Procedures e Blocos Anônimos
+
+Foram desenvolvidos procedimentos armazenados (procedures) e blocos anônimos para facilitar a carga de dados nas tabelas criadas. 
+
+### 📃 Relatórios
+
+Foram criados blocos anônimos para gerar relatórios essenciais para a gestão e monitoramento do projeto:
+
+1. **Relatório de Detecções Mais Recentes**: Utiliza um cursor explícito para identificar e exibir detecções realizadas após uma determinada data.
+
+2. **Relatório de Usuários por Gênero com Detecções**: Utiliza cursores explícitos para contabilizar detecções realizadas por usuários de diferentes gêneros.
+
+3. **Relatório de Espécies em Risco de Extinção**: Utiliza um cursor explícito para identificar e listar espécies que estão em risco de extinção.
+
+4. **Relatório Sumarizado de Espécies por Situação com IDs de Espécies**: Utiliza cursores para agrupar espécies por situação e apresentar IDs de espécies correspondentes.
+
+> Essas funcionalidades são fundamentais para a administração e análise de dados do projeto "Oceano Vivo", proporcionando uma base sólida para a conservação e gestão sustentável dos recursos marinhos.
+
 ## 💻 Tecnologias
 
 As seguintes ferramentas foram usadas neste projeto:
