@@ -1,5 +1,24 @@
 # 🐟 Oceano Vivo 🌊
 
+> Repositório do Banco de Dados: tecnologia a serviço da preservação dos oceanos.
+
+## 📌 Descrição
+
+O projeto "OceanoVivo" visa desenvolver uma solução tecnológica para a identificação automática de espécies marinhas usando inteligência artificial, facilitando o monitoramento e conservação dos ecossistemas oceânicos. Através desta ferramenta, buscamos enfrentar desafios como a pesca excessiva, poluição e mudanças climáticas, que ameaçam a biodiversidade marinha e comprometem a saúde dos ecossistemas oceânicos. A solução inovadora do "OceanoVivo" oferece uma abordagem mais eficiente e precisa para identificar e monitorar espécies marinhas, promovendo a conservação e gestão sustentável dos recursos marinhos.
+
+## 💻 Tecnologias
+
+As seguintes ferramentas foram usadas neste projeto:
+
+## 🗂️ Modelagem
+**Oracle Data Modeler (DER/MER):** Utilizado para criar e gerenciar modelos de dados, facilitando a visualização e a estruturação do banco de dados.
+
+![Oracle Data Modeler](https://img.shields.io/badge/Oracle_Data_Modeler-F80000?style=for-the-badge&logo=oracle&logoColor=white)
+
+### 🌐 Banco de Dados
+**Oracle SQL :**  é um sistema de gerenciamento de banco de dados relacional (RDBMS) desenvolvido pela Oracle Corporation. 
+
+![Oracle SQL](https://img.shields.io/badge/Oracle_SQL-F80000?style=for-the-badge&logo=oracle&logoColor=white)
 
 ## 🫂 Integrantes
 
