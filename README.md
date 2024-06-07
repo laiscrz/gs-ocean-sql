@@ -10,7 +10,7 @@ O projeto "OceanoVivo" visa desenvolver uma solução tecnológica para a identi
 
 As seguintes ferramentas foram usadas neste projeto:
 
-## 🗂️ Modelagem
+### 🗂️ Modelagem
 **Oracle Data Modeler (DER/MER):** Utilizado para criar e gerenciar modelos de dados, facilitando a visualização e a estruturação do banco de dados.
 
 ![Oracle Data Modeler](https://img.shields.io/badge/Oracle_Data_Modeler-F80000?style=for-the-badge&logo=oracle&logoColor=white)
