@@ -1,5 +1,5 @@
 /*
-Empresa LeadTech
+Empresa LeadTech - Banco Desenvolvido para a solução "OceanoVivo"
 
 Bianca Leticia Román Caldeira - RM552267 - Turma : 2TDSPH
 Charlene Aparecida Estevam Mendes Fialho - RM552252 - Turma : 2TDSPH
