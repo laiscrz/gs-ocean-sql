@@ -2,6 +2,8 @@
 
 > Repositório do Banco de Dados: tecnologia a serviço da preservação dos oceanos.
 
+> PITCH : [Confira o nosso pitch](https://www.youtube.com/watch?v=9XQGhKBSSKo)
+
 ## 📌 Descrição
 
 O projeto "OceanoVivo" visa desenvolver uma solução tecnológica para a identificação automática de espécies marinhas usando inteligência artificial, facilitando o monitoramento e conservação dos ecossistemas oceânicos. Através desta ferramenta, buscamos enfrentar desafios como a pesca excessiva, poluição e mudanças climáticas, que ameaçam a biodiversidade marinha e comprometem a saúde dos ecossistemas oceânicos. A solução inovadora do "OceanoVivo" oferece uma abordagem mais eficiente e precisa para identificar e monitorar espécies marinhas, promovendo a conservação e gestão sustentável dos recursos marinhos.
