@@ -12,13 +12,13 @@ O projeto "OceanoVivo" visa desenvolver uma solução tecnológica para a identi
 
 O projeto utiliza o **Oracle Data Modeler** para criar e gerenciar modelos de dados. Esta ferramenta proporciona uma visualização clara da estrutura do banco de dados, facilitando o desenvolvimento e manutenção do esquema.
 
-## 🧩 Modelo Logico
+### 🧩 Modelo Lógico
 
 Visualize a arquitetura do banco de dados no modelo lógico:
 
 <p align="center"><img src="documents/model_logico.png" alt="Diagrama de Classes" width="" height="340" ></p>
 
-## 🧩 Modelo Fisico
+### 🧩 Modelo Fisico
 
 Visualize a arquitetura do banco de dados no modelo físico:
 
