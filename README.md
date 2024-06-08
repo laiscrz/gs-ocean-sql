@@ -68,18 +68,23 @@ Aqui estão os membros do grupo que participaram durante desenvolvimento desta G
 
 * **RM 552267 - Bianca Leticia Román Caldeira**
   - Turma: 2TDSPH
+  - Responsável: Mobile & DevOps
     
 * **RM 552252 – Charlene Aparecida Estevam Mendes Fialho**
   - Turma: 2TDSPH
+  - Responsável: .NET & Java
 
 * **RM 552258 - Laís Alves da Silva Cruz**
   - Turma: 2TDSPH
+  - Responsável: Banco de Dados & DevOps
 
 * **RM 99675 – Lucca Raphael Pereira dos Santos**
   - Turma: 2TDSPW
+  - Responsável: IA & PITCH
 
 * **RM 97916 – Fabricio Torres Antonio**
   - Turma: 2TDSPH
+  - Responsável: QA
 
 <table>
   <tr>
