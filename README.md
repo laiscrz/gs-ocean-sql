@@ -38,15 +38,23 @@ Visualize a arquitetura do banco de dados no modelo físico:
 
 ### 🗄️ Banco de Dados
 
-O banco de dados foi implementado utilizando **Oracle SQL**, um sistema de gerenciamento de banco de dados relacional (RDBMS) robusto. Abaixo estão algumas das funcionalidades implementadas:
+O banco de dados foi implementado utilizando **Oracle SQL**, um sistema de gerenciamento de banco de dados relacional (RDBMS) robusto. 
+
+> 📃 Arquivo com código SQL completo : [Script COMPLETO](codigoGS.sql)
+
+Abaixo estão algumas das funcionalidades implementadas:
 
 - **Tabela de Registro de Log (registro_log)**: Criada para registrar erros ocorridos durante operações de carga de dados. Essa tabela permite rastrear e analisar eventos não esperados.
 
-> Arquivo com CREATE, DROP, ALTER : [Script DDL](scripts/ddl.sql)
+> 📃 Arquivo com CREATE, DROP, ALTER : [Script DDL](scripts/create_ddl.sql)
 
 ### 🔧 Procedures e Blocos Anônimos
 
 Foram desenvolvidos procedimentos armazenados (procedures) e blocos anônimos para facilitar a carga de dados nas tabelas criadas. 
+
+> 📃 Arquivo com criação das PROCEDURES INSERT : [Script CREATE PROCEDURE](scripts/create_insert_procedures.plsql)
+
+> 📃 Arquivo com as chamadas das PROCEDURES INSERT para inserção dos dados : [Script CALL PROCEDURE](scripts/insert_call_procedures.plsql)
 
 ### 📃 Relatórios
 
@@ -59,6 +67,8 @@ Foram criados blocos anônimos para gerar relatórios essenciais para a gestão 
 3. **Relatório de Espécies em Risco de Extinção**: Utiliza um cursor explícito para identificar e listar espécies que estão em risco de extinção.
 
 4. **Relatório Sumarizado de Espécies por Situação com IDs de Espécies**: Utiliza cursores explícitos para agrupar espécies por situação e apresentar IDs de espécies correspondentes.
+
+> 📃 Arquivo com os relatórios: [Script REPORTS](scripts/reports.plsql)
 
 > Essas funcionalidades são fundamentais para a administração e análise de dados do projeto "Oceano Vivo", proporcionando uma base sólida para a conservação e gestão sustentável dos recursos marinhos.
 
