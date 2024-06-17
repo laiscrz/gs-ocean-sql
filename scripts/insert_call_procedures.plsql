@@ -10,6 +10,7 @@ Fabrico Torres Antonio - RM 97916 - Turma : 2TDSPH
 
 -- CHAMADA DAS PROCEDURES DE CARGA DE DADOS (COM BEGIN - END)
 -- Comandos para inserção de dados nas procedures de INSERT
+
 -- INSERIR através de parametros nos procedimentos
 
 SET SERVEROUTPUT ON;
