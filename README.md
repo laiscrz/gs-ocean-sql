@@ -4,6 +4,16 @@
 
 > PITCH : [Confira o nosso pitch](https://www.youtube.com/watch?v=9XQGhKBSSKo)
 
+## ⭐ Nota
+O projeto de Banco de Dados "OceanoVivo", realizado no âmbito da Global Solution com o tema "Blue Future", no 3º semestre de Análise e Desenvolvimento de Sistemas (ADS), recebeu a nota máxima de 100 pontos na disciplina "MASTERING RELATIONAL AND NON-RELATIONAL DATABASES". A avaliação detalhada feita pelo Professor Marcel Thomé Filho foi a seguinte:
+> * **Projeto:** 10
+> * **Modelo Relacional:** 10
+> * **DDL (Data Definition Language):** 20
+> * **DML (Data Manipulation Language)**: 30
+> * **Relatório - Cursor e IF:** 30
+
+> **TOTAL:** 100
+
 ## 📌 Descrição
 
 O projeto "OceanoVivo" visa desenvolver uma solução tecnológica para a identificação automática de espécies marinhas usando inteligência artificial, facilitando o monitoramento e conservação dos ecossistemas oceânicos. Através desta ferramenta, buscamos enfrentar desafios como a pesca excessiva, poluição e mudanças climáticas, que ameaçam a biodiversidade marinha e comprometem a saúde dos ecossistemas oceânicos. A solução inovadora do "OceanoVivo" oferece uma abordagem mais eficiente e precisa para identificar e monitorar espécies marinhas, promovendo a conservação e gestão sustentável dos recursos marinhos.
