@@ -42,6 +42,8 @@ O banco de dados foi implementado utilizando **Oracle SQL**, um sistema de geren
 
 - **Tabela de Registro de Log (registro_log)**: Criada para registrar erros ocorridos durante operações de carga de dados. Essa tabela permite rastrear e analisar eventos não esperados.
 
+> Arquivo com CREATE, DROP, ALTER : [Script DDL](scripts/ddl.sql)
+
 ### 🔧 Procedures e Blocos Anônimos
 
 Foram desenvolvidos procedimentos armazenados (procedures) e blocos anônimos para facilitar a carga de dados nas tabelas criadas. 
